@@ -28,7 +28,7 @@ class Arrow(Component):
     def update(self, dt):
         self.t += dt * self.speed
 
-        if sqr_magnitude(self.game_object.pos, self.get_target_pos()) <= 100:
+        if sqr_magnitude(self.game_object.pos, self.get_target_pos()) <= 200:
             self.target_enemy.take_damage(15)
             self.game_object.destroy = True
         else:
