@@ -34,16 +34,17 @@ class Enemy(Component):
     def take_damage(self, damage):
         self.hp -= damage
 
-        if self.hp <= 0 and not self.game_object.destroy:
-            self.hp = 0
-            enemies.remove(self)
-            self.game_object.destroy = True
+        if not self.game_object.destroy:
+            if self.hp <= 0:
+                self.hp = 0
+                enemies.remove(self)
+                self.game_object.destroy = True
 
-        # update hp bar
-        new_width = int(50 * (self.hp / 100.0))
-        self.hp_bar.set_size((new_width, 5))
-        self.hp_bar.set_pos((TILE_SIZE / 2 - new_width / 2, -6))
-        self.hp_bar.enabled = True
+            # update hp bar
+            new_width = int(50 * (self.hp / 100.0))
+            self.hp_bar.set_size((new_width, 5))
+            self.hp_bar.set_pos((TILE_SIZE / 2 - new_width / 2, -6))
+            self.hp_bar.enabled = True
 
     # todo: fix that mess
     def update(self, dt):
