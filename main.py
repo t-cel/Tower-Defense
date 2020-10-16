@@ -183,14 +183,15 @@ def main():
             tile_object = GameObject(
                 get_tile_coords(x, y),
                 (1, 1),
-                90 * random.randrange(4)
+                0
+                #90 * random.randrange(4)
             )
 
             tile_object.add_component(StaticSprite).init_component(
                 pos=(0, 0),
                 size=(TILE_SIZE, TILE_SIZE),
                 angle=0,
-                image_path= MAP_PATH + 'grass1.jpg',
+                image_path= MAP_PATH + 'grass1.png',
                 alpha=False,
                 clone=True
             )
