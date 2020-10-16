@@ -255,14 +255,6 @@ def main():
         for renderable in renderables:
             renderable.render(screen)
 
-        #pygame.draw.circle(screen, (100, 0, 0), (300, 300), 60, 2)
-        # todo: klasa bazowa dla obiektow rysowalnych (Renderable), aby móc rysować np okręgi i dodawać je
-        # todo: jako komponenty, wtedy pętla obiektów musi wybierac komponenty dziedziczące po Renderable.
-
-        # todo: priorytet / pozycja z rysowanych obiektów, obiekty powinny być sortowane co klatkę względem
-        # todo: tej wartości, dla jednostek musi ona być liczona uwzględniając ich bazową pozycję która powinna
-        # todo: być nad wszystkim, oraz, jeśli są na ścieżce wertykalnej, ich aktualny postęp w niej.
-
         gui_manager.draw_ui(screen)
         # pygame.time.delay(int(1000.0 / 60.0))
         pygame.display.update()
