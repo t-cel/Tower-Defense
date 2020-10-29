@@ -6,14 +6,12 @@ class Circle(Renderable):
     def __init__(self, game_object):
         super().__init__(game_object)
         self.radius = 5
-        self.color = (0, 0, 0)
         self.thickness = 1
 
     def init_component(self, **kwargs):
         super().init_component(**kwargs)
 
         self.radius = kwargs.get("radius")
-        self.color = kwargs.get("color")
         self.thickness = kwargs.get("thickness")
 
     def render(self, screen):

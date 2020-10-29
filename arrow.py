@@ -1,6 +1,8 @@
 from component import Component
-from utils import *
 from map import *
+
+import math_utils
+import math
 
 class Arrow(Component):
     def __init__(self, game_object):
@@ -18,7 +20,7 @@ class Arrow(Component):
     def init_component(self, **kwargs):
         self.target_enemy = kwargs.get("target_enemy")
         target_pos = self.get_target_pos()
-        self.dir = normalize(
+        self.dir = math_utils.normalize(
             (target_pos[0] - self.game_object.pos[0],
              target_pos[1] - self.game_object.pos[1])
         )
@@ -28,12 +30,15 @@ class Arrow(Component):
     def update(self, dt):
         self.t += dt * self.speed
 
-        if sqr_magnitude(self.game_object.pos, self.get_target_pos()) <= 200:
+        if math_utils.sqr_magnitude(self.game_object.pos, self.get_target_pos()) <= 200:
             self.target_enemy.take_damage(15)
             self.game_object.destroy = True
         else:
 
-            self.game_object.set_pos((self.game_object.pos[0] + self.dir[0] * self.speed, self.game_object.pos[1] + self.dir[1] * self.speed))
+            self.game_object.set_pos((
+                self.game_object.pos[0] + self.dir[0] * self.speed,
+                self.game_object.pos[1] + self.dir[1] * self.speed
+            ))
 
             """
             self.game_object.set_pos(lerp(

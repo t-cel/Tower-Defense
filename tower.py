@@ -5,6 +5,8 @@ from circle import Circle
 from game_object import *
 from arrow import Arrow
 
+import math
+
 towers = []
 
 class Tower(Component):
@@ -16,6 +18,8 @@ class Tower(Component):
         self.map_pos = self.last_valid_map_pos
 
         self.circle = game_object.get_components(Circle)[0]
+        self.start_circle_color = self.circle.get_color()
+        self.t = 0.0
 
         self.cool_down = False
         self.timer = 0.0
@@ -56,6 +60,12 @@ class Tower(Component):
                     if coord[0] == map_pos[0] and coord[1] - 1 == map_pos[1]:
                         return False
 
+        # other towers
+        for tower in towers:
+            if tower is not self:
+                if tower.map_pos[0] == map_pos[0] and tower.map_pos[1] == map_pos[1]:
+                    return False
+
         return True
 
     def update_drag(self):
@@ -72,6 +82,13 @@ class Tower(Component):
         self.last_valid_map_pos = self.map_pos
 
         self.game_object.set_pos(target_pos)
+        mult = math.sin(self.t * 5.0) * 0.5 + 1.0
+
+        self.circle.set_color((
+            self.start_circle_color[0] * mult,
+            self.start_circle_color[1] * mult,
+            self.start_circle_color[2] * mult
+        ))
 
     def spawn_projectile(self, target):
         arrow_object = GameObject(
@@ -94,6 +111,8 @@ class Tower(Component):
         )
 
     def update(self, dt):
+        self.t += dt
+
         if self.dragging_mode:
             self.update_drag()
 

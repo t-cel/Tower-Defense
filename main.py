@@ -11,6 +11,10 @@ from dynamic_sprite import *
 from button import *
 from tower import Tower
 from circle import Circle
+from start_path_arrow import StartPathArrpw
+from tile import Tile
+
+import file_utils
 
 # set up pygame
 pygame.init()
@@ -31,15 +35,15 @@ background.fill(gui_manager.ui_theme.get_colour('dark_bg'))
 
 # path
 enemies_paths = [
-    EnemyPath(True, [(0, 7), (1, 7), (2, 7), (3, 7)]),
-    EnemyPath(False, [(4, 7), (4, 6), (4, 5), (4, 4), (4, 3)]),
-    EnemyPath(True, [(4, 2), (5, 2), (6, 2), (7, 2)]),
-    EnemyPath(False, [(7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8)]),
-    EnemyPath(True, [(8, 8)]),
-    EnemyPath(False, [(9, 8), (9, 7), (9, 6), (9, 5), (9, 4), (9, 3), (9, 2)]),
-    EnemyPath(True, [(9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1)]),
-    EnemyPath(False, [(14, 2), (14, 3), (14, 4), (14, 5), (14, 6)]),
-    EnemyPath(True, [(15, 6), (16, 6), (17, 6), (18, 6), (19, 6)])
+    #EnemyPath(True, [(0, 7), (1, 7), (2, 7), (3, 7)]),
+    #EnemyPath(False, [(4, 7), (4, 6), (4, 5), (4, 4), (4, 3)]),
+    #EnemyPath(True, [(4, 2), (5, 2), (6, 2), (7, 2)]),
+    #EnemyPath(False, [(7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8)]),
+    #EnemyPath(True, [(8, 8)]),
+    #EnemyPath(False, [(9, 8), (9, 7), (9, 6), (9, 5), (9, 4), (9, 3), (9, 2)]),
+    #EnemyPath(True, [(9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1)]),
+    #EnemyPath(False, [(14, 2), (14, 3), (14, 4), (14, 5), (14, 6)]),
+    #EnemyPath(True, [(15, 6), (16, 6), (17, 6), (18, 6), (19, 6)])
 ]
 
 def spawn_enemy():
@@ -54,7 +58,7 @@ def spawn_enemy():
         pos = (0, 0),
         size = (TILE_SIZE, TILE_SIZE),
         angle = 0,
-        images_paths = get_all_files_in_path(ENEMIES_PATH + str(1 + random.randrange(3))),
+        images_paths = file_utils.get_all_files_in_path(ENEMIES_PATH + str(1 + random.randrange(3))),
         alpha = True
     )
 
@@ -91,8 +95,8 @@ def spawn_tower():
     tower_object.add_component(Circle).init_component(
         pos=(0, 0),
         radius=TILE_SIZE * 2,
-        color=(100, 0, 0),
-        thickness=2
+        color=(25, 25, 225),
+        thickness=1
     )
 
     tower_object.add_component(Tower).init_component(
@@ -104,7 +108,7 @@ def preload_assets():
     # preload enemies sprites
     for i in range(1, 4):
         resource_cache.add_resource(
-            get_all_files_in_path(ENEMIES_PATH + str(i)),
+            file_utils.get_all_files_in_path(ENEMIES_PATH + str(i)),
             resource_cache.ImagesPack,
             alpha = True
         )
@@ -161,7 +165,7 @@ def main():
 
     # load enemies sprites
     for i in range(1, 3):
-        all_frames = get_all_files_in_path(ENEMIES_PATH + str(i))
+        all_frames = file_utils.get_all_files_in_path(ENEMIES_PATH + str(i))
         frame_index = 0
         for frame in all_frames:
             gui_resource_loader.add_resource(pygame_gui.core.utility.ImageResource(
@@ -183,20 +187,45 @@ def main():
             tile_object = GameObject(
                 get_tile_coords(x, y),
                 (1, 1),
-                0
-                #90 * random.randrange(4)
+                90 * random.randrange(4)
             )
 
             tile_object.add_component(StaticSprite).init_component(
                 pos=(0, 0),
                 size=(TILE_SIZE, TILE_SIZE),
                 angle=0,
-                image_path= MAP_PATH + 'grass1.png',
+                image_path= MAP_PATH + 'grass4.png',
                 alpha=False,
                 clone=True
             )
 
+            tile_object.add_component(Tile).init_component(
+                available = x == 0
+            )
+
+    for y in range(0, MAP_H_HALF*2):
+        pos = get_tile_coords(1, y)
+        #pos = (pos[0], pos[1])
+        arrow_object = GameObject(
+            pos,
+            (1, 1),
+            0
+        )
+
+        arrow_object.add_component(StaticSprite).init_component(
+            pos=(0, 0),
+            size=(TILE_SIZE, TILE_SIZE),
+            angle=0,
+            image_path= UI_PATH + 'arrow.png',
+            alpha=True,
+            clone=True,
+            color=(100, 0, 0)
+        )
+
+        arrow_object.add_component(StartPathArrpw)
+
     # create paths
+    '''
     for path in enemies_paths:
         for coord in path.coords:
             tile_coords = list(get_tile_coords(coord[0], coord[1]))
@@ -211,11 +240,12 @@ def main():
 
             tile_object.add_component(StaticSprite).init_component(
                 pos=(0, 0),
-                size=(TILE_SIZE, int(TILE_SIZE / 2) if path.is_horizontal else TILE_SIZE),
-                angle=0,
-                image_path= MAP_PATH + 'grass2.jpg',
-                alpha=False
+                size=(TILE_SIZE, TILE_SIZE),
+                angle=(90 if not path.is_horizontal else 0),
+                image_path= MAP_PATH + 'road_straight.png',
+                alpha=True
             )
+    '''
 
     # main loop
     last_frame_ticks = 0

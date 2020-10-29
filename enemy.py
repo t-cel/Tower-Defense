@@ -1,7 +1,8 @@
 from map import *
 from dynamic_sprite import DynamicSprite
 from component import Component
-from utils import *
+
+import math_utils
 
 enemies = []
 
@@ -69,10 +70,10 @@ class Enemy(Component):
                 self.start_coords = get_tile_coords(start_pos[0], start_pos[1])
                 self.coord_index += 1
         else:
-            current_path = self.enemies_paths[self.path_index]
+            #current_path = self.enemies_paths[self.path_index]
             target_pos = self.enemies_paths[self.path_index].coords[self.coord_index]
             target_coords = get_tile_coords(target_pos[0], target_pos[1])
-            self.game_object.set_pos(lerp(
+            self.game_object.set_pos(math_utils.lerp(
                 self.start_coords,
                 target_coords,
                 move_t

@@ -1,5 +1,5 @@
 from pygame import *
-import utils
+import file_utils
 from typing import Union
 from typing import Tuple
 from typing import List
@@ -59,11 +59,11 @@ def add_resource(resource_path : Union[str, list],
     """
 
     if resource_type is Surface:
-        image_resources[resource_path] = utils.load_image(resource_path, kwargs.get("alpha"))
+        image_resources[resource_path] = file_utils.load_image(resource_path, kwargs.get("alpha"))
     elif resource_type is ImagesPack:
         images = []
         for path in resource_path:
-            images.append(utils.load_image(path, kwargs.get("alpha")))
+            images.append(file_utils.load_image(path, kwargs.get("alpha")))
         images_pack_resources[target_id] = images
 
 """

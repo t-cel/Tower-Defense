@@ -1,7 +1,7 @@
 from definitions import *
 
 # map
-TILE_SIZE = 64
+TILE_SIZE = 76
 TILE_MARGIN = 0
 MAP_W_HALF = 10
 MAP_H_HALF = 5
