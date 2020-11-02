@@ -7,6 +7,7 @@ class Circle(Renderable):
         super().__init__(game_object)
         self.radius = 5
         self.thickness = 1
+        self.surface = None
 
     def init_component(self, **kwargs):
         super().init_component(**kwargs)
@@ -14,7 +15,12 @@ class Circle(Renderable):
         self.radius = kwargs.get("radius")
         self.thickness = kwargs.get("thickness")
 
+        #self.surface = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
+        #self.surface.set_colorkey((0, 0, 0))
+        #self.surface.set_alpha(128)
+
     def render(self, screen):
+
         pygame.draw.circle(
             screen,
             self.color,
@@ -24,3 +30,8 @@ class Circle(Renderable):
             self.radius,
             self.thickness
         )
+
+        #screen.blit(
+        #    self.surface,
+        #    (self.game_object.pos[0] + self.pos[0], self.game_object.pos[1] + self.pos[1])
+        #)

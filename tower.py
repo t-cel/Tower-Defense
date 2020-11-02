@@ -4,6 +4,7 @@ from enemy import *
 from circle import Circle
 from game_object import *
 from arrow import Arrow
+import math_utils
 
 import math
 
@@ -13,7 +14,7 @@ class Tower(Component):
     def __init__(self, game_object):
         super().__init__(game_object)
         self.dragging_mode = True
-        self.enemies_paths = None
+        self.enemies_path_coords = None
         self.last_valid_map_pos = (-5, 0)
         self.map_pos = self.last_valid_map_pos
 
@@ -26,39 +27,19 @@ class Tower(Component):
         self.cool_down_duration = 0.4
 
     def init_component(self, **kwargs):
-        self.enemies_paths = kwargs.get("enemies_paths")
+        self.enemies_path_coords = kwargs.get("enemies_path_coords")
         towers.append(self)
-
-    def get_final_pos(self, map_pos):
-        target_pos = get_tile_coords(map_pos[0], map_pos[1])
-        for enemy_path in self.enemies_paths:
-            if enemy_path.is_horizontal:
-                for coord in enemy_path.coords:
-                    if coord[0] == map_pos[0] and coord[1] == map_pos[1]:
-                        return target_pos[0], target_pos[1] - TILE_SIZE * 0.5
-
-        return target_pos
 
     def valid_map_pos(self, map_pos):
 
         # map bounds
-        if map_pos[0] <= 0 or map_pos[1] <= 0 or map_pos[0] >= MAP_W_HALF*2 or map_pos[1] >= MAP_H_HALF*2:
+        if map_pos[0] < 0 or map_pos[1] < 0 or map_pos[0] >= MAP_W_HALF*2 or map_pos[1] >= MAP_H_HALF*2:
             return False
 
-        # vertical paths
-        for enemy_path in self.enemies_paths:
-            if not enemy_path.is_horizontal:
-                for coord in enemy_path.coords:
-                    if coord[0] == map_pos[0] and coord[1] == map_pos[1]:
-                        return False
-
-        # don't allow towers to be placed 1 tile higher than horizontal paths to avoid towers intersecting and keep them
-        # aligned
-        for enemy_path in self.enemies_paths:
-            if enemy_path.is_horizontal:
-                for coord in enemy_path.coords:
-                    if coord[0] == map_pos[0] and coord[1] - 1 == map_pos[1]:
-                        return False
+        # paths
+        for coord in self.enemies_path_coords:
+            if coord[0] == map_pos[0] and coord[1] == map_pos[1]:
+                return False
 
         # other towers
         for tower in towers:
@@ -78,7 +59,7 @@ class Tower(Component):
         if not self.valid_map_pos(self.map_pos):
             self.map_pos = self.last_valid_map_pos
 
-        target_pos = self.get_final_pos(self.map_pos)  # convert back to screen coords
+        target_pos = get_tile_coords(self.map_pos[0], self.map_pos[1])  # convert back to screen coords
         self.last_valid_map_pos = self.map_pos
 
         self.game_object.set_pos(target_pos)
@@ -87,7 +68,8 @@ class Tower(Component):
         self.circle.set_color((
             self.start_circle_color[0] * mult,
             self.start_circle_color[1] * mult,
-            self.start_circle_color[2] * mult
+            self.start_circle_color[2] * mult,
+            self.start_circle_color[3]
         ))
 
     def spawn_projectile(self, target):
@@ -118,7 +100,7 @@ class Tower(Component):
 
         elif not self.cool_down:
             for enemy in enemies:
-                sqr_mag = sqr_magnitude(self.game_object.pos, enemy.game_object.pos)
+                sqr_mag = math_utils.sqr_magnitude(self.game_object.pos, enemy.game_object.pos)
                 sqr_r = self.circle.radius * self.circle.radius
                 if sqr_mag <= sqr_r:
                     self.spawn_projectile(enemy)
@@ -133,5 +115,6 @@ class Tower(Component):
     def process_event(self, event):
         if event.type is pygame.MOUSEBUTTONDOWN and self.dragging_mode:
             self.dragging_mode = False
+            self.circle.set_color(self.start_circle_color)
             for tower in towers:
                 tower.game_object.get_components(Circle)[0].enabled = False

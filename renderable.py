@@ -8,7 +8,9 @@ class Renderable(Component):
         super().__init__(game_object)
         self.pos = (0, 0)
         self.z_pos = 100 # object with lower z pos is rendered first
-        self.color = (255, 255, 255)
+
+        self.color = (0, 0, 0, 0)
+        self.set_color((255, 255, 255, 255))
 
     def init_component(self, **kwargs):
         self.pos = kwargs.get("pos")
@@ -32,6 +34,7 @@ class Renderable(Component):
             math_utils.clamp(self.color[0], 0, 255),
             math_utils.clamp(self.color[1], 0, 255),
             math_utils.clamp(self.color[2], 0, 255),
+            math_utils.clamp(self.color[3], 0, 255),
         )
 
     def get_color(self):

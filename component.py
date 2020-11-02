@@ -12,6 +12,9 @@ class Component:
     def init_component(self, **kwargs):
         pass
 
+    def change_activity(self, enable):
+        self.enabled = enable
+
     def update(self, dt):
         pass
 

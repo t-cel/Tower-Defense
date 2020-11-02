@@ -11,7 +11,7 @@ class GameObject:
 
         self.components = []
 
-        self.destroy = False
+        self.mark_to_destroy = False
         game_objects.append(self)
 
     def set_size(self, size):
@@ -26,6 +26,11 @@ class GameObject:
         self.angle = angle
         for sprite in self.get_components(StaticSprite):
             sprite.set_rotation(sprite.angle)
+
+    def destroy(self):
+        for component in self.components:
+            component.change_activity(False)
+        self.components = []
 
     def add_component(self, component_type):
         if issubclass(component_type, Component):

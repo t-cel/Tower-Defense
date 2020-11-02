@@ -20,11 +20,11 @@ class Tile(Component):
         self.counter += dt
         if self.available and self.counter > 1.0:
             mod = math.sin(self.t) * 0.5 + 1.0
-            self.graphics.set_color((
-                255 * mod,
-                255 * mod,
-                255 * mod
-            ))
+            #self.graphics.set_color((
+            #    255 * mod,
+            #    255 * mod,
+            #    255 * mod
+            #))
             self.counter = 0.0
 
 

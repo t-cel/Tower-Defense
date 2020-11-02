@@ -5,16 +5,15 @@ import random
 import resource_cache
 
 from game_object import *
-from enemy_path import *
 from enemy import *
 from dynamic_sprite import *
 from button import *
 from tower import Tower
 from circle import Circle
-from start_path_arrow import StartPathArrpw
 from tile import Tile
 
 import file_utils
+import editor
 
 # set up pygame
 pygame.init()
@@ -23,57 +22,63 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Gra Fakultet')
 
-gui_resource_loader = pygame_gui.core.IncrementalThreadedResourceLoader()
+#gui_resource_loader = pygame_gui.core.IncrementalThreadedResourceLoader()
 gui_manager = pygame_gui.UIManager(
     (SCREEN_WIDTH, SCREEN_HEIGHT),
-    THEMES_PATH + "quick_theme.json",
-    resource_loader = gui_resource_loader
+    pygame_gui.PackageResource(package="sources.themes", resource="ui_theme.json")
 )
 
 background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 background.fill(gui_manager.ui_theme.get_colour('dark_bg'))
 
-# path
-enemies_paths = [
-    #EnemyPath(True, [(0, 7), (1, 7), (2, 7), (3, 7)]),
-    #EnemyPath(False, [(4, 7), (4, 6), (4, 5), (4, 4), (4, 3)]),
-    #EnemyPath(True, [(4, 2), (5, 2), (6, 2), (7, 2)]),
-    #EnemyPath(False, [(7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8)]),
-    #EnemyPath(True, [(8, 8)]),
-    #EnemyPath(False, [(9, 8), (9, 7), (9, 6), (9, 5), (9, 4), (9, 3), (9, 2)]),
-    #EnemyPath(True, [(9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1)]),
-    #EnemyPath(False, [(14, 2), (14, 3), (14, 4), (14, 5), (14, 6)]),
-    #EnemyPath(True, [(15, 6), (16, 6), (17, 6), (18, 6), (19, 6)])
-]
-
 def spawn_enemy():
     # create test enemy
     enemy_object = GameObject(
-        get_tile_coords(-2, 7),
+        get_tile_coords(enemies_path_coords[0][0] - 1, enemies_path_coords[0][1]),
         (1, 1),
         0
     )
 
+    rand_enemy = 1 + random.randrange(3)
     enemy_object.add_component(DynamicSprite).init_component(
-        pos = (0, 0),
+        pos = (0, -TILE_SIZE/4),
         size = (TILE_SIZE, TILE_SIZE),
         angle = 0,
-        images_paths = file_utils.get_all_files_in_path(ENEMIES_PATH + str(1 + random.randrange(3))),
+        images_paths = file_utils.get_all_files_in_path(ENEMIES_PATH + str(rand_enemy)),
         alpha = True
     )
 
+    enemy_object.add_component(DynamicSprite).init_component(
+        pos = (0, -TILE_SIZE/4),
+        size = (TILE_SIZE, TILE_SIZE),
+        angle = 0,
+        images_paths = file_utils.get_all_files_in_path(ENEMIES_PATH + str(rand_enemy) + "/reversed"),
+        alpha = True
+    )
+    enemy_object.get_components(DynamicSprite)[1].change_activity(False)
+
+    '''
     hp_bar = enemy_object.add_component(StaticSprite)
     hp_bar.init_component(
-        pos = (TILE_SIZE / 2 - 25, -6),
+        pos = (250, -20),
         size = (50, 5),
         angle = 0,
         image_path = ENEMIES_PATH + "hp_bar.jpg",
         z_pos = 800
     )
+    '''
+
+    enemy_object.add_component(StaticSprite).init_component(
+        pos=(250, -20),
+        size=(TILE_SIZE, TILE_SIZE),
+        angle=0,
+        image_path=ENEMIES_PATH + "hp_bar.png",
+        z_pos=800,
+        alpha=True
+    )
 
     enemy_object.add_component(Enemy).init_component(
-        enemies_paths = enemies_paths,
-        hp_bar = hp_bar
+        path_coords = enemies_path_coords,
     )
 
 def spawn_tower():
@@ -95,12 +100,12 @@ def spawn_tower():
     tower_object.add_component(Circle).init_component(
         pos=(0, 0),
         radius=TILE_SIZE * 2,
-        color=(25, 25, 225),
+        color=(25, 25, 225, 200),
         thickness=1
     )
 
     tower_object.add_component(Tower).init_component(
-        enemies_paths = enemies_paths
+        enemies_path_coords = enemies_path_coords
     )
 
 def preload_assets():
@@ -110,7 +115,13 @@ def preload_assets():
         resource_cache.add_resource(
             file_utils.get_all_files_in_path(ENEMIES_PATH + str(i)),
             resource_cache.ImagesPack,
-            alpha = True
+            alpha=True
+        )
+
+        resource_cache.add_resource(
+            file_utils.get_all_files_in_path(ENEMIES_PATH + str(i) + "/reversed"),
+            resource_cache.ImagesPack,
+            alpha=True
         )
 
 def init_gui():
@@ -146,40 +157,33 @@ def init_gui():
         size = (150, 40),
         text = 'Tower 1',
         callback = lambda: spawn_tower(),
-        gui_manager = gui_manager
+        gui_manager = gui_manager,
+        #tool_tip_text = "<font face=Montserrat color=#000000 size=2>"
+        #                    "<font color=#FFFFFF>Adds tower</font>"
+        #                "</font>",
+        #object_id = "#test_btn"
     )
 
 def main():
     preload_assets()
-    init_gui()
 
     # ui
-    gui_manager.add_font_paths("Montserrat", FONTS_PATH)
-    gui_manager.preload_fonts([
-        {'name': 'Montserrat', 'html_size': 4.5, 'style': 'regular'},
-        {'name': 'Montserrat', 'html_size': 2, 'style': 'regular'},
-        {'name': 'Montserrat', 'html_size': 6, 'style': 'regular'},
-        {'name': 'Montserrat', 'html_size': 4, 'style': 'regular'},
-        {'name': 'fira_code', 'html_size': 2, 'style': 'regular'},
-    ])
+    #gui_manager.add_font_paths("Montserrat", FONTS_PATH)
+    #gui_manager.preload_fonts([
+    #    {'name': 'Montserrat', 'html_size': 4.5, 'style': 'regular'},
+    #    {'name': 'Montserrat', 'html_size': 2, 'style': 'regular'},
+    #    {'name': 'Montserrat', 'html_size': 6, 'style': 'regular'},
+    #    {'name': 'Montserrat', 'html_size': 4, 'style': 'regular'},
+    #])
 
-    # load enemies sprites
-    for i in range(1, 3):
-        all_frames = file_utils.get_all_files_in_path(ENEMIES_PATH + str(i))
-        frame_index = 0
-        for frame in all_frames:
-            gui_resource_loader.add_resource(pygame_gui.core.utility.ImageResource(
-                'enemy_' + str(i) + '_' + str(frame_index),
-                frame
-            ))
-            frame_index += 1
-
-    #some threads seem to still work after loading
-    #gui_resource_loader.start()
-    #finished_loading = False
-    #while not finished_loading:
-    #    finished_loading = gui_resource_loader.update()
+    '''
+    gui_resource_loader.start()
+    finished_loading = False
+    while not finished_loading:
+        finished_loading = gui_resource_loader.update()
     #print("loaded fonts")
+    '''
+    init_gui()
 
     # create tiles
     for x in range(0, MAP_W_HALF*2):
@@ -203,49 +207,25 @@ def main():
                 available = x == 0
             )
 
-    for y in range(0, MAP_H_HALF*2):
-        pos = get_tile_coords(1, y)
-        #pos = (pos[0], pos[1])
-        arrow_object = GameObject(
-            pos,
-            (1, 1),
-            0
-        )
-
-        arrow_object.add_component(StaticSprite).init_component(
-            pos=(0, 0),
-            size=(TILE_SIZE, TILE_SIZE),
-            angle=0,
-            image_path= UI_PATH + 'arrow.png',
-            alpha=True,
-            clone=True,
-            color=(100, 0, 0)
-        )
-
-        arrow_object.add_component(StartPathArrpw)
-
-    # create paths
-    '''
-    for path in enemies_paths:
-        for coord in path.coords:
-            tile_coords = list(get_tile_coords(coord[0], coord[1]))
-            if path.is_horizontal:
-                tile_coords[1] = tile_coords[1] + int(TILE_SIZE / 2)
-
-            tile_object = GameObject(
-                tile_coords,
+            #debug
+            '''
+            debug_circle_object = GameObject(
+                get_tile_coords(x, y),
                 (1, 1),
                 0
             )
 
-            tile_object.add_component(StaticSprite).init_component(
+            debug_circle_object.add_component(Circle).init_component(
                 pos=(0, 0),
-                size=(TILE_SIZE, TILE_SIZE),
-                angle=(90 if not path.is_horizontal else 0),
-                image_path= MAP_PATH + 'road_straight.png',
-                alpha=True
+                radius=5,
+                thickness=2
             )
-    '''
+            '''
+
+    editor.init_editor(gui_manager)
+    # start path indicators
+    for y in range(0, MAP_H_HALF*2):
+        editor.add_enemy_path_indicator(-1, y, editor.PATH_INDICATOR_DIR_RIGHT)
 
     # main loop
     last_frame_ticks = 0
@@ -270,7 +250,8 @@ def main():
         renderables = []
         for game_object in game_objects:
 
-            if game_object.destroy:
+            if game_object.mark_to_destroy:
+                game_object.destroy()
                 game_objects.remove(game_object)
                 continue
 
@@ -292,6 +273,11 @@ def main():
         last_frame_ticks = t
 
     pygame.quit()
+
+    # todo:
+    #  - przenieść funkcje edytora / mapy do osobnej klasy / pliku
+    #  - zmienić sposób wystrzeliwania pocisków: niech wieże "przewidują"
+    #    w czasie "cooldown" gdzie będzie przeciwnik, i strzelały tam pocisk
 
 if __name__ == "__main__":
     main()
