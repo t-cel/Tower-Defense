@@ -1,0 +1,77 @@
+{
+    "button":
+    {
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "1",
+            "shadow_width": "2"
+        }
+    },
+	
+	"#path_indicator_right":
+	{
+		"images": 
+		{
+			"normal_image": 
+			{
+				"package": "sources.images.ui",
+				"resource": "arrow_right.png",
+				"sub_surface_rect": "0, 0, 32, 32"
+			}
+		}
+	},
+
+	"#path_indicator_left":
+	{
+		"images": 
+		{
+			"normal_image": 
+			{
+				"package": "sources.images.ui",
+				"resource": "arrow_left.png",
+				"sub_surface_rect": "0, 0, 32, 32"
+			}
+		}
+	},
+
+	"#path_indicator_down":
+	{
+		"images": 
+		{
+			"normal_image": 
+			{
+				"package": "sources.images.ui",
+				"resource": "arrow_down.png",
+				"sub_surface_rect": "0, 0, 32, 32"
+			}
+		}
+	},
+
+	"#path_indicator_up":
+	{
+		"images": 
+		{
+			"normal_image": 
+			{
+				"package": "sources.images.ui",
+				"resource": "arrow_up.png",
+				"sub_surface_rect": "0, 0, 32, 32"
+			}
+		}
+	},
+
+	"#remove_btn":
+	{
+		"images": 
+		{
+			"normal_image": 
+			{
+				"package": "sources.images.ui",
+				"resource": "remove.png",
+				"sub_surface_rect": "0, 0, 32, 32"
+			}
+		}
+	}
+}
