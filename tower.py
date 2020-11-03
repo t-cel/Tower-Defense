@@ -33,7 +33,7 @@ class Tower(Component):
     def valid_map_pos(self, map_pos):
 
         # map bounds
-        if map_pos[0] < 0 or map_pos[1] < 0 or map_pos[0] >= MAP_W_HALF*2 or map_pos[1] >= MAP_H_HALF*2:
+        if map_pos[0] < 0 or map_pos[1] < 0 or map_pos[0] >= MAP_W or map_pos[1] >= MAP_H:
             return False
 
         # paths
