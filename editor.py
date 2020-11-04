@@ -21,6 +21,10 @@ def init_editor(_gui_manager):
     global gui_manager
     gui_manager = _gui_manager
 
+    # start path indicators
+    for y in range(0, MAP_H):
+        add_enemy_path_indicator(-1, y, PATH_INDICATOR_DIR_RIGHT)
+
 def add_enemy_path_indicator(x, y, indicator_dir):
     pos = get_tile_coords(x, y)
     pos = list(pos)
@@ -55,7 +59,7 @@ def add_enemy_path_indicator(x, y, indicator_dir):
     register_ui_callback(
         new_indicator,
         pygame_gui.UI_BUTTON_PRESSED,
-        lambda _pos=(x, y): add_enemy_path_part(_pos[0] + new_path_part_offsets[indicator_dir][0],
+        lambda e, _pos=(x, y): add_enemy_path_part(_pos[0] + new_path_part_offsets[indicator_dir][0],
                                                 _pos[1] + new_path_part_offsets[indicator_dir][1]),
     )
 
@@ -98,7 +102,10 @@ def add_remove_button(x, y):
     register_ui_callback(
         remove_btn,
         pygame_gui.UI_BUTTON_PRESSED,
-        lambda: remove_enemy_path_last_point()
+        lambda e: (
+            remove_enemy_path_last_point(),
+            update_indicators()
+        )
     )
 
     path_indicators.append(remove_btn)
@@ -121,6 +128,10 @@ def update_indicators():
         unregister_ui_callback(indicator, pygame_gui.UI_BUTTON_PRESSED)
     path_indicators.clear()
 
+    if len(enemies_path_coords) == 0:
+        init_editor(gui_manager)
+        return
+
     x, y = enemies_path_coords[-1]
 
     if len(enemies_path_coords) > 1:
@@ -142,14 +153,3 @@ def update_indicators():
         add_enemy_path_indicator(x, y, PATH_INDICATOR_DIR_DOWN)
         add_enemy_path_indicator(x, y, PATH_INDICATOR_DIR_UP)
 
-def remove_enemy_path_last_point():
-
-    enemies_path = get_path()
-    enemies_path_coords = get_path_coords()
-
-    enemies_path[-1].mark_to_destroy = True
-    enemies_path.remove(enemies_path[-1])
-    enemies_path_coords.remove(enemies_path_coords[-1])
-
-    update_indicators()
-    update_path()

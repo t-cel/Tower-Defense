@@ -1,9 +1,8 @@
 from game_object import *
-import ui.ui
 
-# MODE_MENU   = 0
-MODE_GAME   = 0
-MODE_EDITOR = 1
+MODE_MENU   = 0
+MODE_GAME   = 1
+MODE_EDITOR = 2
 
 modes = []
 current_mode = -1
@@ -17,6 +16,7 @@ def switch_mode(mode):
     for game_object in game_objects:
         game_object.mark_to_destroy = True
 
+    import ui.ui
     ui.ui.ui_manager.clear_and_reset()
 
     current_mode = mode

@@ -1,7 +1,5 @@
 from pygame.locals import *
-
 from definitions import *
-
 from modes.mode import *
 
 # pygame needs to be init before ui initialization
@@ -14,6 +12,7 @@ pygame.display.set_caption('Tower Defender')
 from ui.ui import *
 from modes.game_mode import GameMode
 from modes.editor_mode import EditorMode
+from modes.menu_mode import MenuMode
 
 def preload_assets():
 
@@ -35,12 +34,13 @@ def main():
     preload_assets()
 
     # init modes
+    modes.append(MenuMode())
     modes.append(GameMode())
     modes.append(EditorMode())
 
     # select start mode
     # switch_mode(MODE_GAME)
-    switch_mode(MODE_EDITOR)
+    switch_mode(MODE_MENU)
 
     # main loop
     last_frame_ticks = 0
@@ -66,8 +66,14 @@ def main():
             # check ui callbacks
             if event.type == pygame.USEREVENT:
                 for callback in ui_callbacks:
+
+                    if not callback[0]:
+                        print("cleaning unused event")
+                        ui_callbacks.remove(callback)
+                        continue
+
                     if callback[0] == event.ui_element and callback[1] == event.user_type:
-                        callback[2]()
+                        callback[2](event)
 
         # update ui manager
         ui_manager.update(delta_time)

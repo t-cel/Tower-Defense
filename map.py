@@ -53,6 +53,7 @@ def get_path():
     update path graphics, remove old and make new
 """
 def update_path():
+
     # remove old
     global enemies_path
     for point in enemies_path:
@@ -60,6 +61,8 @@ def update_path():
     enemies_path = []
 
     global enemies_path_coords
+    if len(enemies_path_coords) == 0:
+        return
 
     # make horizontal path
     new_path_part = GameObject(get_tile_coords(enemies_path_coords[0][0], enemies_path_coords[0][1]), (1, 1), 0)
@@ -180,7 +183,7 @@ def update_path():
 """
 def load_map(file_name):
     global enemies_path_coords
-    with open(file_name, "rb") as file_handle:
+    with open(MAPS_PATH + file_name, "rb") as file_handle:
         enemies_path_coords = pickle.load(file_handle)
 
     update_path()
@@ -202,7 +205,7 @@ def save_map(file_name):
                                "</font></b>")
         return
 
-    with open(file_name, "wb+") as file_handle:
+    with open(MAPS_PATH + file_name, "wb+") as file_handle:
         pickle.dump(enemies_path_coords, file_handle)
 
 
@@ -242,3 +245,16 @@ def create_map():
                 thickness=2
             )
             '''
+
+
+def remove_enemy_path_last_point():
+    enemies_path[-1].mark_to_destroy = True
+    enemies_path.remove(enemies_path[-1])
+    enemies_path_coords.remove(enemies_path_coords[-1])
+
+    update_path()
+
+
+def clear_map():
+    while len(enemies_path_coords) > 0:
+        remove_enemy_path_last_point()
