@@ -11,3 +11,5 @@ PROJECTILES_PATH = "sources/images/projectiles/"
 UI_PATH = "sources/images/ui/"
 MAPS_PATH = "maps/"
 MAPS_EXTENSION = ".tdmap"
+
+DEFINITIONS_PATH = "sources/definitions/"

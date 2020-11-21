@@ -4,8 +4,35 @@ from component import Component
 from static_sprite import StaticSprite
 
 import math_utils
+import json
 
 enemies = []
+enemies_definitions = []
+
+class EnemyDefinition:
+    def __init__(self, name, sprites_directory, speed, health, damages, preview_sprite):
+        self.name = name
+        self.sprites_directory = sprites_directory
+        self.speed = speed
+        self.health = health
+        self.damages = damages
+        self.preview_sprite = preview_sprite
+
+def load_enemies_definitions():
+    f = open(DEFINITIONS_PATH + "enemies.json")
+    data = json.load(f)
+    for enemy_definition in data["enemies"]:
+        enemies_definitions.append(
+            EnemyDefinition(
+                enemy_definition["name"],
+                enemy_definition["spritesDirectory"],
+                enemy_definition["speed"],
+                enemy_definition["health"],
+                enemy_definition["damages"],
+                enemy_definition["previewSprite"]
+            )
+        )
+
 
 class Enemy(Component):
     def __init__(self, game_object):

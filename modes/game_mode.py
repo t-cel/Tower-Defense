@@ -77,13 +77,37 @@ class GameMode(Mode):
             enemies_path_coords=enemies_path_coords
         )
 
-    @staticmethod
-    def init_gui():
-        UILabel(
-            pygame.Rect(int(SCREEN_WIDTH / 2), 10, 100, 25),
-            "Fala: 1",
+    def init_gui(self):
+        # top panel
+        UIPanel(
+            pygame.Rect(0, 0, SCREEN_WIDTH, 30),
+            starting_layer_height=4,
             manager=ui_manager
         )
+
+        # right panel
+        right_panel_w = SCREEN_WIDTH - TILE_SIZE * MAP_W
+        right_panel_h = SCREEN_HEIGHT - 30
+        right_panel = UIPanel(
+            pygame.Rect(TILE_SIZE * MAP_W, 30, right_panel_w, right_panel_h),
+            starting_layer_height=4,
+            manager=ui_manager
+        )
+
+        # back button
+        self.back_btn = UIButton(
+            pygame.Rect(20, 260, right_panel_w * 0.8, 40),
+            "Back To Menu",
+            ui_manager,
+            container=right_panel,
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "bottom"
+            }
+        )
+        register_ui_callback(self.back_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_MENU))
 
         """
         test_spawn_enemy_btn = GameObject(
@@ -115,9 +139,10 @@ class GameMode(Mode):
         )
         """
 
-    def init_mode(self):
-        GameMode.init_gui()
+    def init_mode(self, **kwargs):
+        self.init_gui()
         map.create_map()
+        map.load_map(kwargs.get("file_name"))
 
     def deinit_mode(self):
         pass

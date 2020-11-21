@@ -12,19 +12,39 @@ from pygame_gui.elements.ui_window import UIWindow
 from collections.abc import Sequence
 from pygame_gui.core import IncrementalThreadedResourceLoader
 
+#loader = IncrementalThreadedResourceLoader()
 ui_manager = UIManager(
     (SCREEN_WIDTH, SCREEN_HEIGHT),
     pygame_gui.PackageResource(package="sources.themes", resource="ui_theme.json")
 )
+#ui_manager.set_visual_debug_mode(True)
 
-ui_manager.add_font_paths("montserrat", "sources/fonts/Montserrat-Regular.ttf")
-ui_manager.preload_fonts([{'name': 'montserrat', 'html_size': 4, 'style': 'regular'}])
-loader = IncrementalThreadedResourceLoader()
+"""
+ui_manager.add_font_paths("Montserrat",
+                          "sources/fonts/Montserrat-Regular.ttf",
+                          "sources/fonts/Montserrat-Bold.ttf",
+                          "sources/fonts/Montserrat-Italic.ttf",
+                          "sources/fonts/Montserrat-BoldItalic.ttf")
+
+ui_manager.preload_fonts([{'name': 'Montserrat', 'html_size': 4.5, 'style': 'bold'},
+                          {'name': 'Montserrat', 'html_size': 4.5, 'style': 'regular'},
+                          {'name': 'Montserrat', 'html_size': 2, 'style': 'regular'},
+                          {'name': 'Montserrat', 'html_size': 2, 'style': 'italic'},
+                          {'name': 'Montserrat', 'html_size': 6, 'style': 'bold'},
+                          {'name': 'Montserrat', 'html_size': 6, 'style': 'regular'},
+                          {'name': 'Montserrat', 'html_size': 6, 'style': 'bold_italic'},
+                          {'name': 'Montserrat', 'html_size': 4, 'style': 'bold'},
+                          {'name': 'Montserrat', 'html_size': 4, 'style': 'regular'},
+                          {'name': 'Montserrat', 'html_size': 4, 'style': 'italic'},
+                          {'name': 'fira_code', 'html_size': 2, 'style': 'regular'},
+                          {'name': 'fira_code', 'html_size': 2, 'style': 'bold'},
+                          {'name': 'fira_code', 'html_size': 2, 'style': 'bold_italic'}
+                          ])
 loader.start()
 finished_loading = False
 while not finished_loading:
     finished_loading, progress = loader.update()
-
+"""
 background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 background.fill(ui_manager.get_theme().get_colour('dark_bg'))
 
@@ -90,7 +110,7 @@ class MessageBox(UIWindow):
                 self.kill(),
             ))
 
-            self.no_btn = UIButton(pygame.Rect(110, -50, 100, 40), "NO", ui_manager, container=self, anchors={
+            self.no_btn = UIButton(pygame.Rect(10, -50, 100, 40), "NO", ui_manager, container=self, anchors={
                 "left" : "left",
                 "right" : "left",
                 "top" : "bottom",

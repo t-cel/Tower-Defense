@@ -13,19 +13,23 @@ from ui.ui import *
 from modes.game_mode import GameMode
 from modes.editor_mode import EditorMode
 from modes.menu_mode import MenuMode
+from modes.select_level_mode import SelectLevelMode
+import enemy
 
 def preload_assets():
 
+    enemy.load_enemies_definitions()
+
     # preload enemies sprites
-    for i in range(1, 4):
+    for enemy_definition in enemy.enemies_definitions:
         resource_cache.add_resource(
-            file_utils.get_all_files_in_path(ENEMIES_PATH + str(i)),
+            file_utils.get_all_files_in_path(ENEMIES_PATH + enemy_definition.sprites_directory, ".png"),
             resource_cache.ImagesPack,
             alpha=True
         )
 
         resource_cache.add_resource(
-            file_utils.get_all_files_in_path(ENEMIES_PATH + str(i) + "/reversed"),
+            file_utils.get_all_files_in_path(ENEMIES_PATH + enemy_definition.sprites_directory + "/reversed", ".png"),
             resource_cache.ImagesPack,
             alpha=True
         )
@@ -35,12 +39,13 @@ def main():
 
     # init modes
     modes.append(MenuMode())
+    modes.append(SelectLevelMode())
     modes.append(GameMode())
     modes.append(EditorMode())
 
     # select start mode
-    # switch_mode(MODE_GAME)
-    switch_mode(MODE_MENU)
+    switch_mode(MODE_EDITOR)
+    # switch_mode(MODE_SELECT_LEVEL)
 
     # main loop
     last_frame_ticks = 0
@@ -65,6 +70,7 @@ def main():
 
             # check ui callbacks
             if event.type == pygame.USEREVENT:
+                print(f"checking callbacks: {len(ui_callbacks)}")
                 for callback in ui_callbacks:
 
                     if not callback[0]:

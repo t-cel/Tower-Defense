@@ -79,17 +79,20 @@
 	{
 		"colours":
 		{
-			"dark_bg": "#25292e",
 			"normal_text": "#c5cbd8",
 			"text_shadow": "#505050"
 		},
 
 		"font":
 		{
-			"name": "montserrat",
-			"size": "4",
-			"bold": "0",
-			"italic": "0"
+            "name": "montserrat",
+            "size": "50",
+            "bold": "1",
+            "italic": "0",
+            "regular_resource": { "package": "sources.fonts", "resource": "Montserrat-Regular.ttf"},
+            "bold_resource": { "package": "sources.fonts", "resource": "Montserrat-Bold.ttf"},
+            "italic_resource": { "package": "sources.fonts", "resource": "Montserrat-Italic.ttf"},
+            "bold_italic_resource": { "package": "sources.fonts", "resource": "Montserrat-BoldItalic.ttf"}
 		},
 
 		"misc":
@@ -97,6 +100,43 @@
 			"text_shadow": "1",
 			"text_shadow_size": "2",
 			"text_shadow_offset": "0,0"
+		}
+	},
+
+	"#title_character":
+    {
+		"colours":
+		{
+			"normal_border": "#00000000",
+			"normal_bg": "#00000000",
+			"hovered_bg": "#00000000",
+			"hovered_border": "#00000000"
+		},
+
+        "images":
+        {
+            "normal_image": {
+                "package": "sources.images.enemies.1",
+				"resource": "Golem_01_Walking_000.png"
+            }
+        }
+	},
+	
+	"#no_border_textbox":
+	{	
+		"misc":
+         {
+			 "border_width": "0",
+			 "shadow_width": "0"
+         }
+	},
+
+	"#thicker_panel":
+	{
+		"misc":
+		{
+			"border_width": "2",
+			"shadow_width": "3"
 		}
 	}
 }

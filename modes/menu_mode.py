@@ -7,6 +7,8 @@ from pygame_gui.elements.ui_button import UIButton
 
 from ui.ui import *
 
+from static_sprite import StaticSprite
+
 class MenuMode(Mode):
 
     def init_gui(self):
@@ -17,7 +19,7 @@ class MenuMode(Mode):
         )
 
         UILabel(
-            pygame.Rect(SCREEN_WIDTH / 2 - 100, 100, 200, 40),
+            pygame.Rect(SCREEN_WIDTH / 2 - 300, 100, 600, 100),
             "Tower Defender",
             ui_manager,
             container=bg_panel,
@@ -42,7 +44,7 @@ class MenuMode(Mode):
                 "bottom": "bottom"
             }
         )
-        register_ui_callback(self.start_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_GAME))
+        register_ui_callback(self.start_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_SELECT_LEVEL))
 
         self.editor_btn = UIButton(
             pygame.Rect(SCREEN_WIDTH / 2 - 100, 320, 200, 40),
@@ -58,7 +60,21 @@ class MenuMode(Mode):
         )
         register_ui_callback(self.editor_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_EDITOR))
 
-    def init_mode(self):
+        pygame_gui.elements.ui_image.UIImage(
+            relative_rect=pygame.Rect(SCREEN_WIDTH / 2 - 800, SCREEN_HEIGHT / 2 - 240, 720, 480),
+            image_surface=resource_cache.get_resource(ENEMIES_PATH + "1/Golem_01_Walking_000.png", resource_cache.SurfaceType, alpha=True),
+            manager=ui_manager,
+            container=bg_panel
+        )
+
+        pygame_gui.elements.ui_image.UIImage(
+            relative_rect=pygame.Rect(SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2 - 240, 720, 480),
+            image_surface=resource_cache.get_resource(ENEMIES_PATH + "2/reversed/Golem_02_Walking_000.png", resource_cache.SurfaceType, alpha=True),
+            manager=ui_manager,
+            container=bg_panel
+        )
+
+    def init_mode(self, **kwargs):
         self.init_gui()
 
     def deinit_mode(self):
