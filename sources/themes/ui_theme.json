@@ -138,5 +138,21 @@
 			"border_width": "2",
 			"shadow_width": "3"
 		}
+	},
+
+	"#tower_panel":
+	{
+		"colours":
+		{
+			"dark_bg":"#1a151e"
+		}
+	},
+
+	"#tower_panel.text_box":
+	{
+		"colours":
+		{
+			"dark_bg":"#1a151e"
+		}
 	}
 }

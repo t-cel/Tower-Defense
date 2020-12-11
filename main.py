@@ -15,10 +15,12 @@ from modes.editor_mode import EditorMode
 from modes.menu_mode import MenuMode
 from modes.select_level_mode import SelectLevelMode
 import enemy
+import tower
 
 def preload_assets():
 
     enemy.load_enemies_definitions()
+    tower.load_towers_definitions()
 
     # preload enemies sprites
     for enemy_definition in enemy.enemies_definitions:
@@ -44,8 +46,8 @@ def main():
     modes.append(EditorMode())
 
     # select start mode
-    switch_mode(MODE_EDITOR)
-    # switch_mode(MODE_SELECT_LEVEL)
+    # switch_mode(MODE_EDITOR)
+    switch_mode(MODE_GAME, file_name="nowa_mapa.tdmap")
 
     # main loop
     last_frame_ticks = 0
@@ -70,11 +72,11 @@ def main():
 
             # check ui callbacks
             if event.type == pygame.USEREVENT:
-                print(f"checking callbacks: {len(ui_callbacks)}")
+                # print(f"checking callbacks: {len(ui_callbacks)}")
                 for callback in ui_callbacks:
 
                     if not callback[0]:
-                        print("cleaning unused event")
+                        # print("cleaning unused event")
                         ui_callbacks.remove(callback)
                         continue
 

@@ -5,12 +5,13 @@ from static_sprite import StaticSprite
 import random
 import pickle
 
-from map_settings import *
+#from map_settings import *
+import map_settings
 
 # map
 TILE_SIZE = 80
 TILE_MARGIN = 0
-MAP_W = 17
+MAP_W = 16
 MAP_H = 11
 #MAP_CENTER_X = int(SCREEN_WIDTH / 2)
 MAP_CENTER_X = (MAP_W / 2.0) * TILE_SIZE
@@ -20,7 +21,7 @@ MAP_CENTER_Y = 30 + (MAP_H / 2.0) * TILE_SIZE
 # path
 enemies_path = []
 #enemies_path_coords = []
-settings = get_settings()
+#settings = get_settings()
 
 """
     returns tile screen position based on map coordinates
@@ -42,7 +43,7 @@ def get_tile_pos(coord_x, coord_y):
     returns list of 2-element tuples representing path coordinates (x, y)
 """
 def get_path_coords():
-    return settings.enemies_path_coords
+    return map_settings.settings.enemies_path_coords
 
 
 """
@@ -63,7 +64,7 @@ def update_path():
         point.mark_to_destroy = True
     enemies_path = []
 
-    global settings
+    settings = map_settings.settings
     if len(settings.enemies_path_coords) == 0:
         return
 
@@ -180,11 +181,30 @@ def update_path():
     loads .bin save
 """
 def load_map(file_name):
-    global settings
     with open(MAPS_PATH + file_name, "rb") as file_handle:
-        settings = pickle.load(file_handle)
+        map_settings.settings = pickle.load(file_handle)
 
     update_path()
+
+    """
+        dummy settings
+    """
+    group_1_1 = map_settings.EnemiesGroup()
+    group_1_1.enemies_counts = [ 1, 2, 1 ]
+    group_1_1.spawn_delay = 1.0
+    group_1_1.interval = (0.5, 2.0)
+
+    group_1_2 = map_settings.EnemiesGroup()
+    group_1_2.enemies_counts = [ 3, 2, 1 ]
+    group_1_2.spawn_delay = 1.0
+    group_1_2.interval = (0.5, 1.2)
+
+    fall_1 = map_settings.EnemiesFall()
+    fall_1.groups = [ group_1_1, group_1_2 ]
+    fall_1.gold_reward = 200
+
+    map_settings.settings.start_gold = 500
+    map_settings.settings.falls = [ fall_1 ]
 
 
 """
@@ -194,6 +214,7 @@ def save_map(file_name):
 
     import ui.ui
 
+    settings = map_settings.settings
     if len(settings.enemies_path_coords) < 1 or \
             (settings.enemies_path_coords[-1][0] != MAP_W - 1 and
              settings.enemies_path_coords[-1][1] != MAP_H - 1 and
@@ -246,6 +267,8 @@ def create_map():
 
 
 def remove_enemy_path_last_point():
+    settings = map_settings.settings
+
     enemies_path[-1].mark_to_destroy = True
     enemies_path.remove(enemies_path[-1])
     settings.enemies_path_coords.remove(settings.enemies_path_coords[-1])
@@ -254,5 +277,7 @@ def remove_enemy_path_last_point():
 
 
 def clear_map():
+    settings = map_settings.settings
+
     while len(settings.enemies_path_coords) > 0:
         remove_enemy_path_last_point()

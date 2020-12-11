@@ -9,6 +9,31 @@ import math_utils
 import math
 
 towers = []
+tower_definitions = []
+
+class TowerDefinition:
+    def __init__(self, name, image, range, speed, damages, cost):
+        self.name = name
+        self.image = image
+        self.range = range
+        self.speed = speed
+        self.damages = damages
+        self.cost = cost
+
+def load_towers_definitions():
+    f = open(DEFINITIONS_PATH + "towers.json")
+    data = json.load(f)
+    for tower_definition in data["towers"]:
+        tower_definitions.append(
+            TowerDefinition(
+                tower_definition["name"],
+                tower_definition["image"],
+                tower_definition["range"],
+                tower_definition["speed"],
+                tower_definition["damages"],
+                tower_definition["cost"]
+            )
+        )
 
 class Tower(Component):
     def __init__(self, game_object):

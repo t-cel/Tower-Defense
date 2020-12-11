@@ -99,7 +99,8 @@ class Enemy(Component):
 
         if self.t > 0.99:
             if self.coord_index == len(self.path_coords) - 1:
-                print("end")
+                pass
+                #print("end")
             else:
                 self.t = 0.0
                 start_pos = self.path_coords[self.coord_index]

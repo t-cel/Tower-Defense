@@ -1,0 +1,37 @@
+{
+    "towers": 
+    [
+        {
+            "name": "Wooden Tower",
+            "image": "1",
+            "damages": 5,
+            "speed": 1,
+            "range": 2,
+            "cost": 100
+        },
+        {
+            "name": "Wooden Tower 2",
+            "image": "1",
+            "damages": 8,
+            "speed": 2,
+            "range": 2,
+            "cost": 300
+        },
+        {
+            "name": "Wooden Tower 3",
+            "image": "1",
+            "damages": 4,
+            "speed": 4,
+            "range": 3,
+            "cost": 400
+        },
+        {
+            "name": "Wooden Tower 4",
+            "image": "1",
+            "damages": 12,
+            "speed": 0.5,
+            "range": 5,
+            "cost": 500
+        }
+    ]
+}
