@@ -7,6 +7,7 @@ import pickle
 
 #from map_settings import *
 import map_settings
+import player_stats
 
 # map
 TILE_SIZE = 80
@@ -190,12 +191,12 @@ def load_map(file_name):
         dummy settings
     """
     group_1_1 = map_settings.EnemiesGroup()
-    group_1_1.enemies_counts = [ 1, 2, 1 ]
+    group_1_1.enemies_counts = [ 3, 1, 1 ]
     group_1_1.spawn_delay = 1.0
-    group_1_1.interval = (0.5, 2.0)
+    group_1_1.interval = (0.5, 2.5)
 
     group_1_2 = map_settings.EnemiesGroup()
-    group_1_2.enemies_counts = [ 3, 2, 1 ]
+    group_1_2.enemies_counts = [ 1, 2, 1 ]
     group_1_2.spawn_delay = 1.0
     group_1_2.interval = (0.5, 1.2)
 
@@ -205,6 +206,8 @@ def load_map(file_name):
 
     map_settings.settings.start_gold = 500
     map_settings.settings.falls = [ fall_1 ]
+
+    player_stats.player_gold = map_settings.settings.start_gold
 
 
 """

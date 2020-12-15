@@ -9,16 +9,42 @@ import map
 import file_utils
 
 import tower
+import enemy
 
 from pygame_gui.elements.ui_label import UILabel
 from pygame_gui.elements.ui_scrolling_container import UIScrollingContainer
 from pygame_gui.elements.ui_image import UIImage
+from pygame_gui.elements.ui_world_space_health_bar import UIWorldSpaceHealthBar
+
 from ui.ui import *
+import pygame_gui
+
+import player_stats
 
 class GameMode(Mode):
 
-    @staticmethod
-    def spawn_tower():
+    def on_calcel_build(self):
+        tower.towers.remove(self.dragging_tower)
+        self.dragging_tower.game_object.mark_to_destroy = True
+        self.on_finish_build()
+
+
+    def on_place_tower(self):
+        player_stats.player_gold -= self.dragging_tower.definition.cost
+        self.on_finish_build()
+        self.update_ui()
+
+
+    def on_finish_build(self):
+        self.building_panel.hide(),
+        self.dragging_tower = None
+
+
+    def spawn_tower(self, index):
+
+        self.building_panel.show()
+        definition = tower.tower_definitions[index]
+
         tower_object = GameObject(
             get_tile_coords(3, 0),
             (1, 1),
@@ -29,7 +55,7 @@ class GameMode(Mode):
             pos=(0, 0),
             size=(map.TILE_SIZE, map.TILE_SIZE),
             angle=0,
-            image_path=TOWERS_PATH + '1.png',
+            image_path=TOWERS_PATH + definition.image + '.png',
             alpha=True
         )
 
@@ -41,11 +67,27 @@ class GameMode(Mode):
         )
 
         tower_object.add_component(Tower).init_component(
-            enemies_path_coords=map_settings.settings.enemies_path_coords
+            enemies_path_coords=map_settings.settings.enemies_path_coords,
+            definition=definition,
+            on_build_callback=lambda: self.on_place_tower()
         )
 
+        self.dragging_tower = tower_object.get_components(Tower)[0]
+
+
     def start_fall(self):
-        self.enemies_spawner.start_spawn()
+        self.enemies_spawner.start_spawn(self.on_fall_end)
+        self.start_fall_btn.disable()
+        for btn in self.tower_build_buttons:
+            btn.disable()
+
+
+    def on_fall_end(self):
+        self.start_fall_btn.enable()
+        # for btn in self.tower_build_buttons:
+        #     btn.enable()
+        self.update_ui()
+
 
     def init_gui(self):
         # top panel
@@ -86,6 +128,14 @@ class GameMode(Mode):
             object_id="#no_border_textbox",
         )
 
+        self.enemies_left_label = UITextBox(
+            "<b>Enemies left:</b> 0",
+            pygame.Rect(5, 40, 300, 35),
+            ui_manager,
+            container=fall_info_panel,
+            object_id="#no_border_textbox",
+        )
+
         self.fall_reward_label = UITextBox(
             "<b>Reward:</b> 1000 gold coins",
             pygame.Rect(5, 75, 400, 35),
@@ -109,24 +159,32 @@ class GameMode(Mode):
             }
         )
 
-        UITextBox(
-            "<b>Towers</b>",
+        self.gold_label = UITextBox(
+            "<b><font color=#DEAF21>Gold: </font>" + str(player_stats.player_gold) + "</b>",
             pygame.Rect(5, 5, 300, 35),
             ui_manager,
             container=build_panel,
             object_id="#no_border_textbox",
         )
 
+        UITextBox(
+            "<b>Towers</b>",
+            pygame.Rect(5, 45, 300, 40),
+            ui_manager,
+            container=build_panel,
+            object_id="#no_border_textbox",
+        )
+
         self.towers_view_panel = UIPanel(
-            relative_rect=pygame.Rect(5, 40, right_panel_w - 20, 540),
-            starting_layer_height=4,
+            relative_rect=pygame.Rect(5, 80, right_panel_w - 20, 500),
+            starting_layer_height=3,
             object_id="#thicker_panel",
             manager=ui_manager,
             container=build_panel
         )
 
         self.towers_container = UIScrollingContainer(
-            pygame.Rect(0, 0, right_panel_w - 30, 540),
+            pygame.Rect(0, 0, right_panel_w - 30, 500),
             ui_manager,
             container=self.towers_view_panel,
             anchors={
@@ -136,11 +194,12 @@ class GameMode(Mode):
                 "bottom": "bottom"
             },
             object_id="#enemy_scrolling_container",
-            starting_height=4
+            starting_height=3
         )
 
-        item_height = 190
-        self.towers_container.set_scrollable_area_dimensions((right_panel_w - 50, 2 + len(tower.tower_definitions) * item_height + 10))
+        item_height = 200
+        self.towers_container.set_scrollable_area_dimensions((right_panel_w - 50, 2 + len(tower.tower_definitions) * item_height + 10 + 10))
+        self.tower_build_buttons = []
 
         for n in range(0, len(tower.tower_definitions)):
 
@@ -148,7 +207,7 @@ class GameMode(Mode):
 
             tower_panel = UIPanel(
                 relative_rect=pygame.Rect(2, 5 + item_height * n, right_panel_w - 55, item_height),
-                starting_layer_height=4,
+                starting_layer_height=5,
                 manager=ui_manager,
                 container=self.towers_container,
                 object_id="#tower_panel"
@@ -163,8 +222,8 @@ class GameMode(Mode):
             )
 
             tower_stats_panel = UIPanel(
-                relative_rect=pygame.Rect(7, 35, right_panel_w - 80, 110),
-                starting_layer_height=4,
+                relative_rect=pygame.Rect(7, 35, right_panel_w - 80, 120),
+                starting_layer_height=5,
                 manager=ui_manager,
                 container=tower_panel,
                 anchors={
@@ -179,7 +238,7 @@ class GameMode(Mode):
             image_size = (76, 76)
             image_panel = UIPanel(
                 relative_rect=pygame.Rect(5, 5, image_size[0], image_size[1]),
-                starting_layer_height=4,
+                starting_layer_height=5,
                 manager=ui_manager,
                 container=tower_stats_panel,
             )
@@ -195,7 +254,9 @@ class GameMode(Mode):
             UITextBox(
                 "<font color=#BB0000><b>Damages: </b></font>" + str(definition.damages) +
                 "<br><br>"
-                "<font color=#4488FF><b>Speed: </b></font>" + str(definition.speed) +
+                "<font color=#9141D1><b>Speed: </b></font>" + str(definition.projectile_speed) +
+                "<br><br>" +
+                "<font color=#4488FF><b>Reload Time: </b></font>" + str(definition.reload_time) +
                 "<br><br>" +
                 "<font color=#00FF00><b>Range: </b></font>" + str(definition.range) +
                 "<br><br>" +
@@ -219,11 +280,12 @@ class GameMode(Mode):
                     "bottom": "bottom"
                 }
             )
-            register_ui_callback(tower_build_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: self.spawn_tower())
+            self.tower_build_buttons.append(tower_build_btn)
+            register_ui_callback(tower_build_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e, i=n: self.spawn_tower(i))
 
         buttons_panel = UIPanel(
             relative_rect=pygame.Rect(0, -140, right_panel_w - 5, 140),
-            starting_layer_height=4,
+            starting_layer_height=100,
             object_id="#thicker_panel",
             manager=ui_manager,
             container=right_panel,
@@ -265,37 +327,68 @@ class GameMode(Mode):
         )
         register_ui_callback(self.back_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_MENU))
 
-        """
-        test_spawn_enemy_btn = GameObject(
-            (25, SCREEN_HEIGHT - 100),
-            (1, 1),
-            0
-        )
-        test_spawn_enemy_btn.add_component(Button).init_component(
-            size=(150, 40),
-            text='Spawn Enemy',
-            callback=lambda: GameMode.spawn_enemy(),
-            gui_manager=ui_manager
+
+        # building
+        self.building_panel = UIPanel(
+            pygame.Rect(TILE_SIZE * MAP_W, 30, right_panel_w, right_panel_h),
+            starting_layer_height=200,
+            manager=ui_manager
         )
 
-        test_spawn_tower_btn = GameObject(
-            (25 + 150 + 25, SCREEN_HEIGHT - 100),
-            (1, 1),
-            0
+        UITextBox(
+            "<font size=5><b>Place Tower On Map</b></font>",
+            pygame.Rect(right_panel_w/6, right_panel_h/4, right_panel_w, 40),
+            ui_manager,
+            container=self.building_panel,
+            object_id="#no_border_textbox"
         )
-        test_spawn_tower_btn.add_component(Button).init_component(
-            size=(150, 40),
-            text='Tower 1',
-            callback=lambda: GameMode.spawn_tower(),
-            gui_manager=ui_manager,
-            # tool_tip_text = "<font face=Montserrat color=#000000 size=2>"
-            #                    "<font color=#FFFFFF>Adds tower</font>"
-            #                "</font>",
-            # object_id = "#test_btn"
+
+        cancel_btn = UIButton(
+            pygame.Rect(80, (right_panel_h/4)+50, right_panel_w * 0.5, 40),
+            "Cancel",
+            ui_manager,
+            container=self.building_panel,
+            anchors={
+                "left": "left",
+                "right": "right",
+                "top": "top",
+                "bottom": "bottom"
+            }
         )
-        """
+        register_ui_callback(cancel_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: self.on_calcel_build())
+
+        self.building_panel.hide()
+
+
+    def update_ui(self):
+        self.gold_label.html_text = "<b><font color=#DEAF21>Gold: </font>" + str(player_stats.player_gold) + "</b>";
+        self.gold_label.rebuild()
+
+        i = 0
+        for btn in self.tower_build_buttons:
+            if tower.tower_definitions[i].cost > player_stats.player_gold:
+                btn.disable()
+            else:
+                btn.enable()
+            i += 1
+
+        self.fall_label.html_text = "<b>Fall:</b> " + \
+                                    str(self.enemies_spawner.current_fall+1) + " / " + \
+                                    str(len(map_settings.settings.falls))
+        self.fall_label.rebuild()
+
+        self.fall_reward_label.html_text = "<b>Reward:</b> " + \
+                                           str(map_settings.settings.falls[self.enemies_spawner.current_fall].gold_reward) + \
+                                           " Gold"
+        self.fall_reward_label.rebuild()
+
+        # todo: update enemies left label
+
 
     def init_mode(self, **kwargs):
+        tower.towers = []
+        enemy.enemies = []
+
         self.init_gui()
         map.create_map()
         map.load_map(kwargs.get("file_name"))
@@ -303,6 +396,11 @@ class GameMode(Mode):
         enemies_spawner_gameobject = GameObject((0, 0), (0, 0), 0)
         enemies_spawner_gameobject.add_component(EnemiesSpawner).init_component()
         self.enemies_spawner = enemies_spawner_gameobject.get_components(EnemiesSpawner)[0]
+
+        self.update_ui()
+
+        self.dragging_tower = None
+
 
     def deinit_mode(self):
         pass

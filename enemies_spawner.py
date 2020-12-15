@@ -1,3 +1,4 @@
+from ui.ui import *
 from component import Component
 from game_object import GameObject
 from dynamic_sprite import DynamicSprite
@@ -11,6 +12,10 @@ import enemy
 import map_settings
 
 import random
+
+from pygame_gui.elements.ui_text_box import UITextBox
+import pygame
+
 
 class EnemiesSpawner(Component):
     """
@@ -26,6 +31,21 @@ class EnemiesSpawner(Component):
 
         self.t = 0.0
         self.spawning = False
+        self.on_fall_end_callback = None
+
+        self.wait_for_fall_end = False
+
+        """
+        self.fall_label_opacity = 0
+        self.label_animation_speed = 0.5
+        self.label_animation_t = 0.0
+        self.fall_label = UITextBox(
+                "<font size=7><b><font color=#00000000>Starting Fall 0</font></b></font>",
+                pygame.Rect(SCREEN_WIDTH/4, SCREEN_HEIGHT/4, SCREEN_WIDTH, SCREEN_HEIGHT),
+                ui_manager,
+                object_id="#no_border_textbox"
+        )
+        """
 
     @staticmethod
     def spawn_enemy(index):
@@ -64,14 +84,17 @@ class EnemiesSpawner(Component):
 
         enemy_object.add_component(Enemy).init_component(
             path_coords=map_settings.settings.enemies_path_coords,
+            definition=definition
         )
 
 
-    def start_spawn(self):
+    def start_spawn(self, on_fall_end_callback):
         self.spawning = True
         self.current_fall = 0
         self.current_group = 0
         self.current_group_enemies_to_spawn = map_settings.settings.falls[self.current_fall].groups[self.current_group].enemies_counts
+
+        self.on_fall_end_callback = on_fall_end_callback
 
         self.update_interval()
 
@@ -88,15 +111,17 @@ class EnemiesSpawner(Component):
         group = fall.groups[self.current_group]
         if group.spawn_mode == map_settings.SWAWN_MODE_END_OF_PREVIOUS_GROUP_SPAWN:
             if self.current_group == len(fall.groups) - 1:
-                print("end of fall")
+                # print("end of fall")
+                self.wait_for_fall_end = True
+                self.spawning = False
             else:
-                print("next fall")
+                # print("next group")
                 self.current_group += 1
                 self.current_group_enemies_to_spawn = fall.groups[self.current_group].enemies_counts
 
 
     def on_spawn(self):
-        print(self.current_group_enemies_to_spawn)
+        # print(self.current_group_enemies_to_spawn)
 
         available_enemies = {}
         for i in range(0, len(self.current_group_enemies_to_spawn)):
@@ -127,3 +152,21 @@ class EnemiesSpawner(Component):
             if self.t > self.random_interval:
                 self.on_spawn()
                 self.t = 0.0
+
+        if self.wait_for_fall_end:
+            if len(enemy.enemies) == 0:
+                self.on_fall_end_callback()
+                self.wait_for_fall_end = False
+
+        """
+        if dt < 1.0 and self.label_animation_t < 1.0:
+            self.label_animation_t += self.label_animation_speed * dt
+            self.fall_label_opacity = int(255.0 * self.label_animation_t)
+            if self.fall_label_opacity > 255:
+                self.fall_label_opacity = 255
+            as_str = list(str(hex(self.fall_label_opacity))[-2:])
+            if as_str[0] == "x":
+                as_str[0] = "0"
+            self.fall_label.html_text = "<font size=7><b><font color=#000000" + ("".join(as_str)) +">Starting Fall 0</font></b></font>"
+            self.fall_label.rebuild()
+        """

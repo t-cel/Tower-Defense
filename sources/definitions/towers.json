@@ -4,34 +4,38 @@
         {
             "name": "Wooden Tower",
             "image": "1",
-            "damages": 5,
-            "speed": 1,
+            "damages": 4,
+            "projectileSpeed": 4.5,
+            "reloadTime": 0.4,
             "range": 2,
             "cost": 100
         },
         {
             "name": "Wooden Tower 2",
             "image": "1",
-            "damages": 8,
-            "speed": 2,
+            "damages": 6,
+            "projectileSpeed": 5.5,
+            "reloadTime": 0.7,
             "range": 2,
             "cost": 300
         },
         {
             "name": "Wooden Tower 3",
             "image": "1",
-            "damages": 4,
-            "speed": 4,
-            "range": 3,
-            "cost": 400
+            "damages": 10,
+            "projectileSpeed": 6.6,
+            "reloadTime": 0.85,
+            "range": 2.25,
+            "cost": 500
         },
         {
             "name": "Wooden Tower 4",
             "image": "1",
-            "damages": 12,
-            "speed": 0.5,
-            "range": 5,
-            "cost": 500
+            "damages": 13,
+            "projectileSpeed": 6.8,
+            "reloadTime": 0.75,
+            "range": 2.8,
+            "cost": 700
         }
     ]
 }

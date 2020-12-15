@@ -133,7 +133,7 @@ class EditorMode(Mode):
         editor.update_indicators()
 
     def on_clear_btn_click(self):
-        if len(enemies_path_coords) == 0:
+        if len(map_settings.settings.enemies_path_coords) == 0:
             return
 
         show_message_box(

@@ -5,7 +5,7 @@
             "name": "Orc",
             "spritesDirectory": "2",
             "previewSprite": "Golem_02_Walking_000",
-            "speed": 5,
+            "speed": 1.15,
             "health": 20,
             "damages": 5
         },
@@ -14,7 +14,7 @@
             "name": "Treeman",
             "spritesDirectory": "3",
             "previewSprite": "Golem_03_Walking_000",
-            "speed": 4,
+            "speed": 1.0,
             "health": 30,
             "damages": 8
         },
@@ -23,7 +23,7 @@
             "name": "Golem",
             "spritesDirectory": "1",
             "previewSprite": "Golem_01_Walking_000",
-            "speed": 3,
+            "speed": 0.9,
             "health": 40,
             "damages": 11
         }

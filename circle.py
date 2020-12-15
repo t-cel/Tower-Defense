@@ -27,7 +27,7 @@ class Circle(Renderable):
             (int(self.pos[0] + self.game_object.pos[0] + TILE_SIZE / 2),
              int(self.pos[1] + self.game_object.pos[1] + TILE_SIZE / 2)
              ),
-            self.radius,
+            int(self.radius),
             self.thickness
         )
 
