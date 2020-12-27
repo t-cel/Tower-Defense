@@ -184,7 +184,7 @@ class GameMode(Mode):
         )
 
         self.towers_container = UIScrollingContainer(
-            pygame.Rect(0, 0, right_panel_w - 30, 500),
+            pygame.Rect(0, 0, right_panel_w - 30, 500 * Y_RATIO),
             ui_manager,
             container=self.towers_view_panel,
             anchors={
@@ -197,7 +197,7 @@ class GameMode(Mode):
             starting_height=3
         )
 
-        item_height = 200
+        item_height = 200 * Y_RATIO
         self.towers_container.set_scrollable_area_dimensions((right_panel_w - 50, 2 + len(tower.tower_definitions) * item_height + 10 + 10))
         self.tower_build_buttons = []
 
@@ -215,14 +215,14 @@ class GameMode(Mode):
 
             UITextBox(
                 "<b>" + definition.name + "</b>",
-                pygame.Rect(5, 5, 340, 30),
+                pygame.Rect(5, 5, 340 * X_RATIO, 30 * Y_RATIO),
                 ui_manager,
                 container=tower_panel,
                 object_id="#no_border_textbox",
             )
 
             tower_stats_panel = UIPanel(
-                relative_rect=pygame.Rect(7, 35, right_panel_w - 80, 120),
+                relative_rect=pygame.Rect(7, 35, right_panel_w - 80, 120 * Y_RATIO),
                 starting_layer_height=5,
                 manager=ui_manager,
                 container=tower_panel,
@@ -235,7 +235,7 @@ class GameMode(Mode):
             )
 
             image_path = TOWERS_PATH + definition.image + ".png"
-            image_size = (76, 76)
+            image_size = (76 * X_RATIO, 76 * Y_RATIO)
             image_panel = UIPanel(
                 relative_rect=pygame.Rect(5, 5, image_size[0], image_size[1]),
                 starting_layer_height=5,
@@ -269,7 +269,7 @@ class GameMode(Mode):
             )
 
             tower_build_btn = UIButton(
-                pygame.Rect(8, -34, right_panel_w - 80, 30),
+                pygame.Rect(8, -34 * Y_RATIO, (right_panel_w - 80) * X_RATIO, 30 * Y_RATIO),
                 "Build",
                 ui_manager,
                 container=tower_panel,
@@ -284,7 +284,7 @@ class GameMode(Mode):
             register_ui_callback(tower_build_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e, i=n: self.spawn_tower(i))
 
         buttons_panel = UIPanel(
-            relative_rect=pygame.Rect(0, -140, right_panel_w - 5, 140),
+            relative_rect=pygame.Rect(0, -140 * Y_RATIO, right_panel_w - 5, 140 * Y_RATIO),
             starting_layer_height=100,
             object_id="#thicker_panel",
             manager=ui_manager,
@@ -299,7 +299,7 @@ class GameMode(Mode):
 
         # start fall button
         self.start_fall_btn = UIButton(
-            pygame.Rect(20, -120, right_panel_w * 0.8, 40),
+            pygame.Rect(20, -120 * Y_RATIO, right_panel_w * 0.8, 40 * Y_RATIO),
             "Start Fall",
             ui_manager,
             container=buttons_panel,
@@ -314,7 +314,7 @@ class GameMode(Mode):
 
         # back button
         self.back_btn = UIButton(
-            pygame.Rect(20, -60, right_panel_w * 0.8, 40),
+            pygame.Rect(20, -60 * Y_RATIO, right_panel_w * 0.8, 40 * Y_RATIO),
             "Back To Menu",
             ui_manager,
             container=buttons_panel,

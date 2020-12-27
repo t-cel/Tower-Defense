@@ -57,6 +57,9 @@ class EnemiesSpawner(Component):
             0
         )
 
+        for f in file_utils.get_all_files_in_path(ENEMIES_PATH + definition.sprites_directory):
+            print(f)
+
         enemy_object.add_component(DynamicSprite).init_component(
             pos=(0, -map.TILE_SIZE / 4),
             size=(map.TILE_SIZE, map.TILE_SIZE),

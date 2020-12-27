@@ -202,7 +202,11 @@ class Tower(Component):
 
 
     def process_event(self, event):
-        if event.type is pygame.MOUSEBUTTONDOWN and self.dragging_mode and self.current_pos_is_valid:
+        # print(event.type, pygame.MOUSEBUTTONDOWN)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(f"clicked, dragging mode: {self.dragging_mode}, current pos is valid: {self.current_pos_is_valid}")
+
+        if event.type == pygame.MOUSEBUTTONDOWN and self.dragging_mode and self.current_pos_is_valid:
             self.dragging_mode = False
             self.circle.set_color(self.start_circle_color)
             if self.on_build_callback:

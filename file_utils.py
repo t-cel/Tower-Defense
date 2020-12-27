@@ -10,6 +10,8 @@ def get_all_files_in_path(path, extension=None):
     f = []
     for (dir_path, dir_names, file_names) in walk(path):
 
+        file_names.sort()
+
         if extension:
             for file_name in file_names:
                 if os.path.splitext(file_name)[1] != extension:

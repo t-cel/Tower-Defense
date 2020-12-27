@@ -58,6 +58,8 @@ def main():
         t = pygame.time.get_ticks()
         delta_time = (t - last_frame_ticks) / 1000.0
 
+        # print(delta_time)
+
         # process events
         for event in pygame.event.get():
             # print("event in main")
@@ -122,10 +124,6 @@ def main():
 
     pygame.quit()
 
-    # todo:
-    #  - przenieść funkcje edytora / mapy do osobnej klasy / pliku
-    #  - zmienić sposób wystrzeliwania pocisków: niech wieże "przewidują"
-    #    w czasie "cooldown" gdzie będzie przeciwnik, i strzelały tam pocisk
 
 if __name__ == "__main__":
     main()

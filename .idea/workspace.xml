@@ -2,254 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b78ba3a6-0d58-4a0c-b200-ce26c9284b53" name="Default Changelist" comment="updated ui, added player gold, upgraded projectile shooting, &#10;upgraded build mode">
-      <change afterPath="$PROJECT_DIR$/player_stats.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gra fakultet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gra fakultet.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arrow.py" beforeDir="false" afterPath="$PROJECT_DIR$/arrow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/circle.py" beforeDir="false" afterPath="$PROJECT_DIR$/circle.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/component.py" beforeDir="false" afterPath="$PROJECT_DIR$/component.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/definitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic_sprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic_sprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/editor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/enemies_spawner.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies_spawner.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/enemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/map.py" beforeDir="false" afterPath="$PROJECT_DIR$/map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/maps/nowa_mapa.tdmap" beforeDir="false" afterPath="$PROJECT_DIR$/maps/nowa_mapa.tdmap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/math_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/math_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modes/editor_mode.py" beforeDir="false" afterPath="$PROJECT_DIR$/modes/editor_mode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modes/game_mode.py" beforeDir="false" afterPath="$PROJECT_DIR$/modes/game_mode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/player_stats.py" beforeDir="false" afterPath="$PROJECT_DIR$/player_stats.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/renderable.py" beforeDir="false" afterPath="$PROJECT_DIR$/renderable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/definitions/enemies.json" beforeDir="false" afterPath="$PROJECT_DIR$/sources/definitions/enemies.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/definitions/towers.json" beforeDir="false" afterPath="$PROJECT_DIR$/sources/definitions/towers.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/images/ui/ui_bar_bottom.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/images/ui/ui_bar_top.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sources/themes/ui_theme.json" beforeDir="false" afterPath="$PROJECT_DIR$/sources/themes/ui_theme.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resource_cache.py" beforeDir="false" afterPath="$PROJECT_DIR$/resource_cache.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static_sprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/static_sprite.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tower.py" beforeDir="false" afterPath="$PROJECT_DIR$/tower.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5035587">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/map.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="466">
-                  <caret line="205" lean-forward="true" selection-start-line="205" selection-end-line="205" />
-                  <folding>
-                    <element signature="e#0#25#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/modes/game_mode.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="463">
-                  <caret line="384" column="41" selection-start-line="384" selection-start-column="41" selection-end-line="384" selection-end-column="41" />
-                  <folding>
-                    <element signature="e#0#24#0" expanded="true" />
-                    <element signature="e#1518#1677#0" />
-                    <element signature="e#1640#1765#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pygame_gui/elements/ui_text_box.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="291">
-                  <caret line="489" column="8" selection-start-line="489" selection-start-column="8" selection-end-line="489" selection-end-column="8" />
-                  <folding>
-                    <element signature="e#14434#18708#0" />
-                    <element signature="e#19094#19255#0" />
-                    <element signature="e#19267#19469#1" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/player_stats.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="51">
-                  <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/arrow.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="698">
-                  <caret line="76" column="44" selection-start-line="76" selection-start-column="29" selection-end-line="76" selection-end-column="44" />
-                  <folding>
-                    <element signature="e#0#31#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/static_sprite.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/renderable.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="476">
-                  <caret line="28" column="27" lean-forward="true" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
-                  <folding>
-                    <element signature="e#0#23#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ui/ui.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/circle.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="357">
-                  <caret line="21" column="29" lean-forward="true" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
-                  <folding>
-                    <element signature="e#0#24#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/enemies_spawner.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="214">
-                  <caret line="38" column="28" selection-start-line="38" selection-start-column="28" selection-end-line="38" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#0#16#0" expanded="true" />
-                    <element signature="e#747#2169#0" />
-                    <element signature="e#2207#2455#0" />
-                    <element signature="e#2497#2742#0" />
-                    <element signature="e#2787#3358#0" />
-                    <element signature="e#3393#4121#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ui/map_settings_window.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-646">
-                  <caret line="118" column="107" lean-forward="true" selection-start-line="118" selection-start-column="107" selection-end-line="118" selection-end-column="107" />
-                  <folding>
-                    <element signature="e#0#50#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/tower.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="335">
-                  <caret line="124" column="33" lean-forward="true" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
-                  <folding>
-                    <element signature="e#0#17#0" expanded="true" />
-                    <element signature="e#1698#1964#0" />
-                    <element signature="e#2013#2527#0" />
-                    <element signature="e#4309#4907#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/modes/editor_mode.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="591">
-                  <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
-                  <folding>
-                    <element signature="e#0#24#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/modes/menu_mode.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="484">
-                  <caret line="37" column="23" lean-forward="true" selection-start-line="37" selection-start-column="23" selection-end-line="37" selection-end-column="23" />
-                  <folding>
-                    <element signature="e#0#24#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/map_settings.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="323">
-                  <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/main.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-364">
-                  <caret line="55" column="34" lean-forward="true" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
-                  <folding>
-                    <element signature="e#0#27#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/enemy.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="602">
-                  <caret line="91" column="11" selection-start-line="91" selection-start-column="11" selection-end-line="91" selection-end-column="11" />
-                  <folding>
-                    <element signature="e#0#17#0" expanded="true" />
-                    <element signature="e#1846#2361#0" />
-                    <element signature="e#2400#3066#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -283,13 +65,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/arrow.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/editor.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/modes/menu_mode.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/modes/editor_mode.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/static_sprite.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/main.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/modes/game_mode.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/static_sprite.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/editor.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/arrow.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/modes/editor_mode.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/main.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/modes/menu_mode.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -343,6 +125,7 @@
     <option name="width" value="1936" />
     <option name="height" value="1176" />
   </component>
+  <component name="ProjectId" id="1lzjECRzA1AxqRJByPN5WCoJ8ra" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -370,27 +153,19 @@
       </pane>
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/Tower-Defense-38b8cd41b24f3e19fedf336c1835cb179970671d/Tower-Defense-38b8cd41b24f3e19fedf336c1835cb179970671d" />
-    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Projekty\python\gra fakultet\ui" />
       <recent name="D:\Projekty\python\gra fakultet\modes" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -420,6 +195,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>

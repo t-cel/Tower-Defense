@@ -10,7 +10,7 @@ import map_settings
 import player_stats
 
 # map
-TILE_SIZE = 80
+TILE_SIZE = int(80 * X_RATIO)
 TILE_MARGIN = 0
 MAP_W = 16
 MAP_H = 11
@@ -191,17 +191,12 @@ def load_map(file_name):
         dummy settings
     """
     group_1_1 = map_settings.EnemiesGroup()
-    group_1_1.enemies_counts = [ 3, 1, 1 ]
+    group_1_1.enemies_counts = [ 1, 0, 0 ]
     group_1_1.spawn_delay = 1.0
     group_1_1.interval = (0.5, 2.5)
 
-    group_1_2 = map_settings.EnemiesGroup()
-    group_1_2.enemies_counts = [ 1, 2, 1 ]
-    group_1_2.spawn_delay = 1.0
-    group_1_2.interval = (0.5, 1.2)
-
     fall_1 = map_settings.EnemiesFall()
-    fall_1.groups = [ group_1_1, group_1_2 ]
+    fall_1.groups = [ group_1_1 ]
     fall_1.gold_reward = 200
 
     map_settings.settings.start_gold = 500
