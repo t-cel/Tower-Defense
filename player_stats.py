@@ -3,3 +3,4 @@
 """
 
 player_gold = 0
+player_hp = 100.0

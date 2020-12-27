@@ -193,5 +193,13 @@
 	"#fall_text_box":
 	{
 		
+	},
+
+	"#player_health_bar":
+	{
+		"colours":
+		{
+			"dark_bg": "#CC1111FF"
+		}
 	}
 }

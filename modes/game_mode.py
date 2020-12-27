@@ -4,6 +4,7 @@ from enemy import Enemy
 from circle import Circle
 from tower import Tower
 from enemies_spawner import EnemiesSpawner
+from game_gui_updater import GameGUIUpdater
 
 import map
 import file_utils
@@ -32,7 +33,7 @@ class GameMode(Mode):
     def on_place_tower(self):
         player_stats.player_gold -= self.dragging_tower.definition.cost
         self.on_finish_build()
-        self.update_ui()
+        self.game_gui_updater.update_stats_gui()
 
 
     def on_finish_build(self):
@@ -41,7 +42,6 @@ class GameMode(Mode):
 
 
     def spawn_tower(self, index):
-
         self.building_panel.show()
         definition = tower.tower_definitions[index]
 
@@ -84,17 +84,28 @@ class GameMode(Mode):
 
     def on_fall_end(self):
         self.start_fall_btn.enable()
+        curr_fall = map_settings.settings.falls[self.enemies_spawner.current_fall]
+        player_stats.player_gold += curr_fall.gold_reward
         # for btn in self.tower_build_buttons:
         #     btn.enable()
-        self.update_ui()
+        self.game_gui_updater.update_stats_gui()
 
 
     def init_gui(self):
         # top panel
-        UIPanel(
+        top_panel = UIPanel(
             pygame.Rect(0, 0, SCREEN_WIDTH, 30),
             starting_layer_height=4,
             manager=ui_manager
+        )
+
+        # player's health bar
+        self.player_hp_bar = UIPanel(
+            relative_rect=pygame.Rect(SCREEN_WIDTH / 2, 5, SCREEN_WIDTH / 2 - 15, 15),
+            manager=ui_manager,
+            starting_layer_height=5,
+            container=top_panel,
+            object_id="#player_health_bar"
         )
 
         # right panel
@@ -360,31 +371,6 @@ class GameMode(Mode):
         self.building_panel.hide()
 
 
-    def update_ui(self):
-        self.gold_label.html_text = "<b><font color=#DEAF21>Gold: </font>" + str(player_stats.player_gold) + "</b>";
-        self.gold_label.rebuild()
-
-        i = 0
-        for btn in self.tower_build_buttons:
-            if tower.tower_definitions[i].cost > player_stats.player_gold:
-                btn.disable()
-            else:
-                btn.enable()
-            i += 1
-
-        self.fall_label.html_text = "<b>Fall:</b> " + \
-                                    str(self.enemies_spawner.current_fall+1) + " / " + \
-                                    str(len(map_settings.settings.falls))
-        self.fall_label.rebuild()
-
-        self.fall_reward_label.html_text = "<b>Reward:</b> " + \
-                                           str(map_settings.settings.falls[self.enemies_spawner.current_fall].gold_reward) + \
-                                           " Gold"
-        self.fall_reward_label.rebuild()
-
-        # todo: update enemies left label
-
-
     def init_mode(self, **kwargs):
         tower.towers = []
         enemy.enemies = []
@@ -397,7 +383,16 @@ class GameMode(Mode):
         enemies_spawner_gameobject.add_component(EnemiesSpawner).init_component()
         self.enemies_spawner = enemies_spawner_gameobject.get_components(EnemiesSpawner)[0]
 
-        self.update_ui()
+        game_gui_updater_go = GameObject((0, 0), (1, 1), 0)
+        game_gui_updater_go.add_component(GameGUIUpdater).init_component(
+            fall_label=self.fall_label,
+            fall_reward_label=self.fall_reward_label,
+            gold_label=self.gold_label,
+            tower_build_buttons=self.tower_build_buttons,
+            enemies_spawner=self.enemies_spawner
+        )
+        self.game_gui_updater = game_gui_updater_go.get_components(GameGUIUpdater)[0]
+        self.game_gui_updater.update_stats_gui()
 
         self.dragging_tower = None
 

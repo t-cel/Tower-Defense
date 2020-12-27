@@ -191,16 +191,25 @@ def load_map(file_name):
         dummy settings
     """
     group_1_1 = map_settings.EnemiesGroup()
-    group_1_1.enemies_counts = [ 1, 0, 0 ]
-    group_1_1.spawn_delay = 1.0
-    group_1_1.interval = (0.5, 2.5)
+    group_1_1.enemies_counts = [ 0, 0, 1 ]
+    group_1_1.spawn_delay = 0.0
+    group_1_1.interval = (0.5, 0.5)
+
+    group_1_2 = map_settings.EnemiesGroup()
+    group_1_2.enemies_counts = [ 1, 0, 0 ]
+    group_1_2.spawn_delay = 2.0
+    group_1_2.interval = (0.5, 2.5)
 
     fall_1 = map_settings.EnemiesFall()
-    fall_1.groups = [ group_1_1 ]
+    fall_1.groups = [ group_1_1, group_1_2 ]
     fall_1.gold_reward = 200
 
+    fall_2 = map_settings.EnemiesFall()
+    fall_2.groups = [ group_1_1, group_1_1, group_1_2 ]
+    fall_2.gold_reward = 500
+
     map_settings.settings.start_gold = 500
-    map_settings.settings.falls = [ fall_1 ]
+    map_settings.settings.falls = [ fall_1, fall_2 ]
 
     player_stats.player_gold = map_settings.settings.start_gold
 

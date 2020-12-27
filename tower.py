@@ -203,8 +203,8 @@ class Tower(Component):
 
     def process_event(self, event):
         # print(event.type, pygame.MOUSEBUTTONDOWN)
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print(f"clicked, dragging mode: {self.dragging_mode}, current pos is valid: {self.current_pos_is_valid}")
+        #if event.type == pygame.MOUSEBUTTONDOWN:
+        #    print(f"clicked, dragging mode: {self.dragging_mode}, current pos is valid: {self.current_pos_is_valid}")
 
         if event.type == pygame.MOUSEBUTTONDOWN and self.dragging_mode and self.current_pos_is_valid:
             self.dragging_mode = False

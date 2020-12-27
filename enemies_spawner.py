@@ -24,7 +24,7 @@ class EnemiesSpawner(Component):
 
     def __init__(self, game_object):
         super().__init__(game_object)
-        self.current_fall = 0
+        self.current_fall = -1
         self.current_group = 0
         self.current_group_enemies_to_spawn = [0] * len(enemy.enemies_definitions)
         self.random_interval = 0.0
@@ -57,8 +57,8 @@ class EnemiesSpawner(Component):
             0
         )
 
-        for f in file_utils.get_all_files_in_path(ENEMIES_PATH + definition.sprites_directory):
-            print(f)
+        # for f in file_utils.get_all_files_in_path(ENEMIES_PATH + definition.sprites_directory):
+        #     print(f)
 
         enemy_object.add_component(DynamicSprite).init_component(
             pos=(0, -map.TILE_SIZE / 4),
@@ -93,9 +93,11 @@ class EnemiesSpawner(Component):
 
     def start_spawn(self, on_fall_end_callback):
         self.spawning = True
-        self.current_fall = 0
         self.current_group = 0
-        self.current_group_enemies_to_spawn = map_settings.settings.falls[self.current_fall].groups[self.current_group].enemies_counts
+        self.current_fall += 1
+        self.current_group_enemies_to_spawn = map_settings.settings.falls[self.current_fall].groups[self.current_group].enemies_counts.copy()
+
+        print(self.current_group_enemies_to_spawn)
 
         self.on_fall_end_callback = on_fall_end_callback
 
@@ -120,7 +122,9 @@ class EnemiesSpawner(Component):
             else:
                 # print("next group")
                 self.current_group += 1
-                self.current_group_enemies_to_spawn = fall.groups[self.current_group].enemies_counts
+                self.current_group_enemies_to_spawn = fall.groups[self.current_group].enemies_counts.copy()
+                self.t = 0.0
+                self.random_interval = fall.groups[self.current_group].spawn_delay
 
 
     def on_spawn(self):
@@ -138,8 +142,6 @@ class EnemiesSpawner(Component):
         rand = random.randint(0, len(available_enemies) - 1)
         index = int(list(available_enemies.keys())[rand])
         self.current_group_enemies_to_spawn[index] -= 1
-
-        #print("items: " + str(list(available_enemies.keys())) + ", random: " + str(rand))
 
         EnemiesSpawner.spawn_enemy(index)
         self.update_interval()
