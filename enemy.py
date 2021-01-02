@@ -5,6 +5,8 @@ from static_sprite import StaticSprite
 
 from circle import Circle
 
+import session_data
+
 import math_utils
 import json
 
@@ -49,6 +51,7 @@ class Enemy(Component):
         self.start_coords = game_object.pos
 
         self.hp = 100.0
+        self.damages = 0
         self.hp_bar = None
 
         self.dynamic_sprite = None
@@ -74,6 +77,7 @@ class Enemy(Component):
 
         self.speed = self.definition.speed
         self.hp = self.definition.health
+        self.damages = self.definition.damages
 
         self.hp_bar = self.game_object.get_components(StaticSprite)[-1]
         self.hp_bar.change_activity(False)
@@ -81,7 +85,7 @@ class Enemy(Component):
         self.dynamic_sprite = self.game_object.get_components(DynamicSprite)[0]
 
         # tests
-        """
+
         self.game_object.add_component(Circle).init_component(
             pos=(0, 0),
             radius=5,
@@ -89,7 +93,7 @@ class Enemy(Component):
             thickness=1,
             z_pos=900
         )
-        """
+
 
 
     def take_damage(self, damage):
@@ -136,7 +140,10 @@ class Enemy(Component):
 
         if self.t > 0.99:
             if self.coord_index == len(self.path_coords) - 1:
-                pass
+                session_data.player_hp -= self.damages
+                enemies.remove(self)
+                self.game_object.mark_to_destroy = True
+                #pass
                 #print("end")
             else:
                 self.t = 0.0

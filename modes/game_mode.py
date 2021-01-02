@@ -2,6 +2,7 @@ from modes.mode import *
 from dynamic_sprite import DynamicSprite
 from enemy import Enemy
 from circle import Circle
+from rectangle import Rectangle
 from tower import Tower
 from enemies_spawner import EnemiesSpawner
 from game_gui_updater import GameGUIUpdater
@@ -20,7 +21,7 @@ from pygame_gui.elements.ui_world_space_health_bar import UIWorldSpaceHealthBar
 from ui.ui import *
 import pygame_gui
 
-import player_stats
+import session_data
 
 class GameMode(Mode):
 
@@ -31,14 +32,16 @@ class GameMode(Mode):
 
 
     def on_place_tower(self):
-        player_stats.player_gold -= self.dragging_tower.definition.cost
+        session_data.player_gold -= self.dragging_tower.definition.cost
         self.on_finish_build()
         self.game_gui_updater.update_stats_gui()
 
 
     def on_finish_build(self):
-        self.building_panel.hide(),
+        self.building_panel.hide()
         self.dragging_tower = None
+        for t in tower.towers:
+            t.change_range_indicators_activity(False)
 
 
     def spawn_tower(self, index):
@@ -59,12 +62,28 @@ class GameMode(Mode):
             alpha=True
         )
 
-        tower_object.add_component(Circle).init_component(
-            pos=(0, 0),
-            radius=map.TILE_SIZE * 2,
-            color=(25, 25, 225, 200),
-            thickness=1
-        )
+        if definition.range_type == tower.CIRCULAR_RANGE_TYPE:
+            tower_object.add_component(Circle).init_component(
+                pos=(0, 0),
+                radius=map.TILE_SIZE * 2,
+                color=(25, 25, 225, 200),
+                thickness=1
+            )
+        else:
+            tower_object.add_component(Rectangle).init_component(
+                pos=(0, 0),
+                w=map.TILE_SIZE,
+                h=map.TILE_SIZE,
+                color=(25, 25, 225, 200),
+                thickness=1
+            )
+            tower_object.add_component(Rectangle).init_component(
+                pos=(0, 0),
+                w=map.TILE_SIZE,
+                h=map.TILE_SIZE,
+                color=(25, 25, 225, 200),
+                thickness=1
+            )
 
         tower_object.add_component(Tower).init_component(
             enemies_path_coords=map_settings.settings.enemies_path_coords,
@@ -85,7 +104,7 @@ class GameMode(Mode):
     def on_fall_end(self):
         self.start_fall_btn.enable()
         curr_fall = map_settings.settings.falls[self.enemies_spawner.current_fall]
-        player_stats.player_gold += curr_fall.gold_reward
+        session_data.player_gold += curr_fall.gold_reward
         # for btn in self.tower_build_buttons:
         #     btn.enable()
         self.game_gui_updater.update_stats_gui()
@@ -106,6 +125,14 @@ class GameMode(Mode):
             starting_layer_height=5,
             container=top_panel,
             object_id="#player_health_bar"
+        )
+
+        self.enemy_fall_bar = UIPanel(
+            relative_rect=pygame.Rect(15, 5, SCREEN_WIDTH / 2 - 15, 15),
+            manager=ui_manager,
+            starting_layer_height=5,
+            container=top_panel,
+            object_id="#enemies_fall_bar"
         )
 
         # right panel
@@ -139,17 +166,9 @@ class GameMode(Mode):
             object_id="#no_border_textbox",
         )
 
-        self.enemies_left_label = UITextBox(
-            "<b>Enemies left:</b> 0",
-            pygame.Rect(5, 40, 300, 35),
-            ui_manager,
-            container=fall_info_panel,
-            object_id="#no_border_textbox",
-        )
-
         self.fall_reward_label = UITextBox(
             "<b>Reward:</b> 1000 gold coins",
-            pygame.Rect(5, 75, 400, 35),
+            pygame.Rect(5, 40, 400, 35),
             ui_manager,
             container=fall_info_panel,
             object_id="#no_border_textbox",
@@ -171,7 +190,7 @@ class GameMode(Mode):
         )
 
         self.gold_label = UITextBox(
-            "<b><font color=#DEAF21>Gold: </font>" + str(player_stats.player_gold) + "</b>",
+            "<b><font color=#DEAF21>Gold: </font>" + str(session_data.player_gold) + "</b>",
             pygame.Rect(5, 5, 300, 35),
             ui_manager,
             container=build_panel,
@@ -389,7 +408,9 @@ class GameMode(Mode):
             fall_reward_label=self.fall_reward_label,
             gold_label=self.gold_label,
             tower_build_buttons=self.tower_build_buttons,
-            enemies_spawner=self.enemies_spawner
+            enemies_spawner=self.enemies_spawner,
+            player_hp_bar=self.player_hp_bar,
+            enemies_fall_bar=self.enemy_fall_bar
         )
         self.game_gui_updater = game_gui_updater_go.get_components(GameGUIUpdater)[0]
         self.game_gui_updater.update_stats_gui()

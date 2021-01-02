@@ -1,6 +1,7 @@
 from map import *
 from static_sprite import *
 from circle import Circle
+from rectangle import Rectangle
 from game_object import *
 from arrow import Arrow
 
@@ -12,11 +13,17 @@ import math
 towers = []
 tower_definitions = []
 
+RECTANGULAR_RANGE_TYPE = "Rectangular"
+CIRCULAR_RANGE_TYPE = "Circular"
+
+# arrow_num = 0
+
 class TowerDefinition:
-    def __init__(self, name, image, range, projectile_speed, reload_time, damages, cost):
+    def __init__(self, name, image, range, range_type, projectile_speed, reload_time, damages, cost):
         self.name = name
         self.image = image
         self.range = range
+        self.range_type = range_type
         self.projectile_speed = projectile_speed
         self.reload_time = reload_time
         self.damages = damages
@@ -31,6 +38,7 @@ def load_towers_definitions():
                 tower_definition["name"],
                 tower_definition["image"],
                 tower_definition["range"],
+                tower_definition["rangeType"],
                 tower_definition["projectileSpeed"],
                 tower_definition["reloadTime"],
                 tower_definition["damages"],
@@ -49,14 +57,16 @@ class Tower(Component):
         self.map_pos = self.last_valid_map_pos
         self.on_build_callback = None
 
-        self.circle = game_object.get_components(Circle)[0]
-        self.start_circle_color = self.circle.get_color()
+        # self.circle = None
+        # self.rectangles = []
+        self.range_indicators = []
+
+        self.start_color = None
         self.t = 0.0
 
         self.cool_down = False
         self.timer = 0.0
         self.cool_down_duration = 0.4
-        self.range = 0.0
 
 
     def init_component(self, **kwargs):
@@ -65,7 +75,25 @@ class Tower(Component):
         self.on_build_callback = kwargs.get("on_build_callback")
 
         self.cool_down_duration = self.definition.reload_time
-        self.circle.radius = self.definition.range * TILE_SIZE
+
+        if self.definition.range_type == CIRCULAR_RANGE_TYPE:
+            circle = self.game_object.get_components(Circle)[0]
+            circle.radius = self.definition.range * TILE_SIZE
+            self.start_color = circle.get_color()
+            self.range_indicators = [circle]
+        else:
+            rectangles = self.game_object.get_components(Rectangle)
+
+            rectangles[0].pos = (-self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5, TILE_SIZE * 0.25)
+            rectangles[0].w = self.definition.range * TILE_SIZE
+            rectangles[0].h = TILE_SIZE * 0.5
+
+            rectangles[1].pos = (TILE_SIZE * 0.25, -self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5)
+            rectangles[1].w = TILE_SIZE * 0.5
+            rectangles[1].h = self.definition.range * TILE_SIZE
+
+            self.start_color = rectangles[0].get_color()
+            self.range_indicators = rectangles
 
         towers.append(self)
 
@@ -90,9 +118,14 @@ class Tower(Component):
         return True
 
 
+    def change_range_indicators_activity(self, show):
+        for indicator in self.range_indicators:
+            indicator.enabled = show
+
+
     def update_drag(self):
         for tower in towers:
-            tower.game_object.get_components(Circle)[0].enabled = True
+            tower.change_range_indicators_activity(True)
 
         target_pos = pygame.mouse.get_pos()  # get mouse pos on window
         self.map_pos = get_tile_pos(target_pos[0], target_pos[1])  # convert to map pos
@@ -109,12 +142,13 @@ class Tower(Component):
         self.game_object.set_pos(target_pos)
         mult = math.sin(self.t * 5.0) * 0.5 + 1.0
 
-        self.circle.set_color((
-            self.start_circle_color[0] * mult,
-            self.start_circle_color[1] * mult,
-            self.start_circle_color[2] * mult,
-            self.start_circle_color[3]
-        ))
+        for indicator in self.range_indicators:
+            indicator.set_color((
+                self.start_color[0] * mult,
+                self.start_color[1] * mult,
+                self.start_color[2] * mult,
+                self.start_color[3]
+            ))
 
 
     def get_intercept_pos(self, e):
@@ -156,10 +190,14 @@ class Tower(Component):
 
     def spawn_projectile(self, target_pos):
 
+        # global arrow_num
+        # arrow_num+=1
+
         arrow_object = GameObject(
             self.game_object.pos,
             (1, 1),
             0
+            # "arrow" + str(arrow_num)
         )
 
         arrow_object.add_component(StaticSprite).init_component(
@@ -178,38 +216,64 @@ class Tower(Component):
         )
 
 
+    def detect_and_shot(self):
+        for e in enemy.enemies:
+            sqr_mag = math_utils.sqr_magnitude(self.game_object.pos, (e.get_target_pos()))
+            if self.definition.range_type == CIRCULAR_RANGE_TYPE:
+                sqr_r = self.range_indicators[0].radius * self.range_indicators[0].radius
+                if sqr_mag <= sqr_r:
+                    target_pos = self.get_intercept_pos(e)
+                    if target_pos is not None:
+                        # print("circular")
+                        self.spawn_projectile(target_pos)
+                        self.cool_down = True
+                    return
+            else:
+                # todo: zrobić rectangle range na podstawie koordynatów na mapie oraz dystansu
+                #       oraz przy trybie przeciągania dać możliwość wyboru zasięgu horyzontalnego
+                #       lub wertykalnego
+                for rectangle in self.range_indicators:
+                    if rectangle.pos[0] + self.game_object.pos[0] <= e.game_object.pos[0] <= rectangle.pos[0] + \
+                            self.game_object.pos[0] + rectangle.w and \
+                            rectangle.pos[1] + self.game_object.pos[1] <= e.game_object.pos[1] <= rectangle.pos[1] + \
+                            self.game_object.pos[1] + rectangle.h:
+                        target_pos = self.get_intercept_pos(e)
+                        if target_pos is not None:
+                            # print("rectangle")
+                            # print(f"spawn projectile: {arrow_num + 1}")
+                            self.spawn_projectile(target_pos)
+                            self.cool_down = True
+                        return
+
+
     def update(self, dt):
         self.t += dt
 
         if self.dragging_mode:
             self.update_drag()
-
-        elif not self.cool_down:
-            for e in enemy.enemies:
-                sqr_mag = math_utils.sqr_magnitude(self.game_object.pos, (e.get_target_pos()))
-                sqr_r = self.circle.radius * self.circle.radius
-                if sqr_mag <= sqr_r:
-                    target_pos = self.get_intercept_pos(e)
-                    if target_pos is not None:
-                        self.spawn_projectile(target_pos)
-                        self.cool_down = True
-                    break
         else:
-            self.timer += dt
-            if self.timer >= self.cool_down_duration:
-                self.timer = 0
-                self.cool_down = False
+            if not self.cool_down:
+                self.detect_and_shot()
+            else:
+                self.timer += dt
+                if self.timer >= self.cool_down_duration:
+                    self.timer = 0
+                    self.cool_down = False
+
+            target_pos = pygame.mouse.get_pos()  # get mouse pos on window
+            map_pos = get_tile_pos(target_pos[0], target_pos[1])
+            self.change_range_indicators_activity(map_pos == self.map_pos)
 
 
     def process_event(self, event):
-        # print(event.type, pygame.MOUSEBUTTONDOWN)
-        #if event.type == pygame.MOUSEBUTTONDOWN:
-        #    print(f"clicked, dragging mode: {self.dragging_mode}, current pos is valid: {self.current_pos_is_valid}")
-
         if event.type == pygame.MOUSEBUTTONDOWN and self.dragging_mode and self.current_pos_is_valid:
             self.dragging_mode = False
-            self.circle.set_color(self.start_circle_color)
+
+            for indicator in self.range_indicators:
+                indicator.set_color(self.start_color)
+
             if self.on_build_callback:
                 self.on_build_callback()
+
             for tower in towers:
-                tower.game_object.get_components(Circle)[0].enabled = False
+                tower.change_range_indicators_activity(False)

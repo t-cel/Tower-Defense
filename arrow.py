@@ -50,12 +50,17 @@ class Arrow(Component):
     def update(self, dt):
         #print("delta time: " + str(dt))
 
+        # bug - potrafi zabić dwóch na raz
+        # print(self.hit_ground)
         if not self.hit_ground:
+            # print(f"checking enemies, {self.game_object.name}")
             for e in enemy.enemies:
-                if math_utils.sqr_magnitude(self.game_object.pos, e.get_target_pos()) <= 200:
+                if math_utils.sqr_magnitude(self.game_object.pos, e.get_target_pos()) <= 100:
+                    # print(f"take damages, {self.game_object.name}")
                     e.take_damage(self.damages)
                     self.game_object.mark_to_destroy = True
-                    return
+                    self.hit_ground = True
+                    break
 
             self.game_object.set_pos((
                 self.game_object.pos[0] + self.dir[0] * self.speed * dt * 100,

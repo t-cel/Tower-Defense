@@ -10,12 +10,12 @@ import map
 import file_utils
 import enemy
 import map_settings
+import session_data
 
 import random
 
 from pygame_gui.elements.ui_text_box import UITextBox
 import pygame
-
 
 class EnemiesSpawner(Component):
     """
@@ -90,6 +90,8 @@ class EnemiesSpawner(Component):
             definition=definition
         )
 
+        session_data.enemies_left -= 1
+
 
     def start_spawn(self, on_fall_end_callback):
         self.spawning = True
@@ -97,7 +99,12 @@ class EnemiesSpawner(Component):
         self.current_fall += 1
         self.current_group_enemies_to_spawn = map_settings.settings.falls[self.current_fall].groups[self.current_group].enemies_counts.copy()
 
-        print(self.current_group_enemies_to_spawn)
+        # print(self.current_group_enemies_to_spawn)
+        session_data.enemies_left = session_data.enemies_in_level = 0
+        for group in map_settings.settings.falls[self.current_fall].groups:
+            session_data.enemies_in_level += sum(group.enemies_counts)
+        session_data.enemies_left = session_data.enemies_in_level
+        # print(f"enemies left: {enemies_left}")
 
         self.on_fall_end_callback = on_fall_end_callback
 
@@ -158,10 +165,18 @@ class EnemiesSpawner(Component):
                 self.on_spawn()
                 self.t = 0.0
 
+        if self.wait_for_fall_end and len(enemy.enemies) == 0 and session_data.enemies_left == 0:
+            self.on_fall_end_callback()
+            self.wait_for_fall_end = False
+
+        """
         if self.wait_for_fall_end:
             if len(enemy.enemies) == 0:
                 self.on_fall_end_callback()
                 self.wait_for_fall_end = False
+        """
+
+        #print(session_data.enemies_left, session_data.enemies_in_level)
 
         """
         if dt < 1.0 and self.label_animation_t < 1.0:

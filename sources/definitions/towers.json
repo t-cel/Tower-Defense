@@ -2,40 +2,44 @@
     "towers": 
     [
         {
-            "name": "Wooden Tower",
+            "name": "Basic Tower",
             "image": "1",
             "damages": 4,
             "projectileSpeed": 4.5,
             "reloadTime": 0.4,
             "range": 2,
+            "rangeType": "Circular",
             "cost": 100
         },
         {
-            "name": "Wooden Tower 2",
-            "image": "1",
-            "damages": 6,
-            "projectileSpeed": 5.5,
-            "reloadTime": 0.7,
-            "range": 2,
-            "cost": 300
-        },
-        {
-            "name": "Wooden Tower 3",
+            "name": "Close Range Tower",
             "image": "1",
             "damages": 10,
-            "projectileSpeed": 6.6,
-            "reloadTime": 0.85,
-            "range": 2.25,
+            "projectileSpeed": 5.5,
+            "reloadTime": 0.6,
+            "range": 1.5,
+            "rangeType": "Circular",
+            "cost": 200
+        },
+        {
+            "name": "Sniper Tower",
+            "image": "1",
+            "damages": 25,
+            "projectileSpeed": 8.0,
+            "reloadTime": 1.2,
+            "range": 8,
+            "rangeType": "Rectangular",
             "cost": 500
         },
         {
-            "name": "Wooden Tower 4",
+            "name": "Sniper Tower",
             "image": "1",
-            "damages": 13,
-            "projectileSpeed": 6.8,
-            "reloadTime": 0.75,
-            "range": 2.8,
-            "cost": 700
+            "damages": 25,
+            "projectileSpeed": 7.0,
+            "reloadTime": 0.8,
+            "range": 2.25,
+            "rangeType": "Rectangular",
+            "cost": 500
         }
     ]
 }

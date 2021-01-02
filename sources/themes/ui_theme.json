@@ -201,5 +201,13 @@
 		{
 			"dark_bg": "#CC1111FF"
 		}
+	},
+
+	"#enemies_fall_bar":
+	{
+		"colours":
+		{
+			"dark_bg": "#6d6e6d"
+		}
 	}
 }

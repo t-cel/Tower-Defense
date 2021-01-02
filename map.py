@@ -7,7 +7,7 @@ import pickle
 
 #from map_settings import *
 import map_settings
-import player_stats
+import session_data
 
 # map
 TILE_SIZE = int(80 * X_RATIO)
@@ -190,28 +190,36 @@ def load_map(file_name):
     """
         dummy settings
     """
-    group_1_1 = map_settings.EnemiesGroup()
-    group_1_1.enemies_counts = [ 0, 0, 1 ]
-    group_1_1.spawn_delay = 0.0
-    group_1_1.interval = (0.5, 0.5)
+    # groups
+    groups_1 = [
+        map_settings.EnemiesGroup([5, 0, 0], 0.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([7, 0, 0], 1.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([10, 0, 0], 3.0, (0.5, 0.8))
+    ]
 
-    group_1_2 = map_settings.EnemiesGroup()
-    group_1_2.enemies_counts = [ 1, 0, 0 ]
-    group_1_2.spawn_delay = 2.0
-    group_1_2.interval = (0.5, 2.5)
+    groups_2 = [
+        map_settings.EnemiesGroup([5, 2, 0], 0.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([5, 2, 0], 1.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([11, 0, 0], 3.0, (0.3, 0.5))
+    ]
 
-    fall_1 = map_settings.EnemiesFall()
-    fall_1.groups = [ group_1_1, group_1_2 ]
-    fall_1.gold_reward = 200
+    groups_3 = [
+        map_settings.EnemiesGroup([10, 4, 0], 0.0, (0.3, 0.5)),
+        map_settings.EnemiesGroup([12, 5, 0], 1.0, (0.25, 0.4)),
+        map_settings.EnemiesGroup([0, 7, 0], 1.0, (0.4, 0.8)),
+        map_settings.EnemiesGroup([25, 0, 0], 4.0, (0.2, 0.35))
+    ]
 
-    fall_2 = map_settings.EnemiesFall()
-    fall_2.groups = [ group_1_1, group_1_1, group_1_2 ]
-    fall_2.gold_reward = 500
+    # falls
 
     map_settings.settings.start_gold = 500
-    map_settings.settings.falls = [ fall_1, fall_2 ]
+    map_settings.settings.falls = [
+        map_settings.EnemiesFall(groups_1, 200),
+        map_settings.EnemiesFall(groups_2, 500),
+        map_settings.EnemiesFall(groups_3, 800),
+    ]
 
-    player_stats.player_gold = map_settings.settings.start_gold
+    session_data.player_gold = map_settings.settings.start_gold
 
 
 """

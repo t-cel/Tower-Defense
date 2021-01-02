@@ -4,10 +4,11 @@ game_objects = []
 
 # Basic game object, container for components and sprites.
 class GameObject:
-    def __init__(self, pos, size, angle):
+    def __init__(self, pos, size, angle, name=""):
         self.pos = pos
         self.size = size
         self.angle = angle
+        self.name = name
 
         self.components = []
 
