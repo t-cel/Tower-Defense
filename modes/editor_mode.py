@@ -111,7 +111,6 @@ class EditorMode(Mode):
 
     def open_file_dialog(self, save=True):
         self.file_dialog = SaveLoadWindow(
-            pygame.Rect(SCREEN_WIDTH / 2 - 440 / 2, SCREEN_HEIGHT / 2 - 500 / 2, 440, 500),
             "maps",
             "Save Map" if save else "Load Map",
             lambda f: self.on_save_confirm_btn_click(f) if save else self.on_load_confirm_btn_click(f),

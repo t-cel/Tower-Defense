@@ -10,9 +10,9 @@ import file_utils
 from pathlib import Path
 
 class SaveLoadWindow(UIWindow):
-    def __init__(self, rect, path, title, confirm_callback, save):
+    def __init__(self, path, title, confirm_callback, save):
         super().__init__(
-            rect,
+            pygame.Rect(SCREEN_WIDTH / 2 - 440 / 2, SCREEN_HEIGHT / 2 - 500 / 2, 440, 500),
             ui_manager,
             window_display_title=title,
             resizable=True

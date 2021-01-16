@@ -80,22 +80,19 @@ class SelectLevelMode(Mode):
                 "bottom": "bottom"
             }
         )
-        register_ui_callback(select_custom_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: self.open_file_dialog())
-
-    def open_file_dialog(self):
-        self.file_dialog = SaveLoadWindow(
-            pygame.Rect(SCREEN_WIDTH / 2 - 440 / 2, SCREEN_HEIGHT / 2 - 500 / 2, 440, 500),
-            "maps",
-            "Select Map",
-            lambda f: self.on_file_select(f),
-            False
+        register_ui_callback(select_custom_btn, pygame_gui.UI_BUTTON_PRESSED,
+            lambda e: SaveLoadWindow(
+                "maps",
+                "Select Map",
+                lambda f: switch_mode(MODE_GAME, file_name=f),
+                False
+            )
         )
 
-    def on_file_select(self, file_name):
-        switch_mode(MODE_GAME, file_name=file_name)
 
     def init_mode(self, **kwargs):
         self.init_gui()
+
 
     def deinit_mode(self):
         pass

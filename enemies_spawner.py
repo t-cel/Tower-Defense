@@ -31,7 +31,7 @@ class EnemiesSpawner(Component):
 
         self.t = 0.0
         self.spawning = False
-        self.on_fall_end_callback = None
+        self.game_mode = None
 
         self.wait_for_fall_end = False
 
@@ -47,8 +47,7 @@ class EnemiesSpawner(Component):
         )
         """
 
-    @staticmethod
-    def spawn_enemy(index):
+    def spawn_enemy(self, index):
         definition = enemy.enemies_definitions[index]
 
         enemy_object = GameObject(
@@ -87,13 +86,14 @@ class EnemiesSpawner(Component):
 
         enemy_object.add_component(Enemy).init_component(
             path_coords=map_settings.settings.enemies_path_coords,
-            definition=definition
+            definition=definition,
+            game_mode=self.game_mode
         )
 
         session_data.enemies_left -= 1
 
 
-    def start_spawn(self, on_fall_end_callback):
+    def start_spawn(self):
         self.spawning = True
         self.current_group = 0
         self.current_fall += 1
@@ -105,8 +105,6 @@ class EnemiesSpawner(Component):
             session_data.enemies_in_level += sum(group.enemies_counts)
         session_data.enemies_left = session_data.enemies_in_level
         # print(f"enemies left: {enemies_left}")
-
-        self.on_fall_end_callback = on_fall_end_callback
 
         self.update_interval()
 
@@ -150,12 +148,12 @@ class EnemiesSpawner(Component):
         index = int(list(available_enemies.keys())[rand])
         self.current_group_enemies_to_spawn[index] -= 1
 
-        EnemiesSpawner.spawn_enemy(index)
+        self.spawn_enemy(index)
         self.update_interval()
 
 
     def init_component(self, **kwargs):
-        pass
+        self.game_mode = kwargs.get("game_mode")
 
 
     def update(self, dt):
@@ -165,9 +163,13 @@ class EnemiesSpawner(Component):
                 self.on_spawn()
                 self.t = 0.0
 
-        if self.wait_for_fall_end and len(enemy.enemies) == 0 and session_data.enemies_left == 0:
-            self.on_fall_end_callback()
-            self.wait_for_fall_end = False
+        if session_data.player_hp > 0:
+            if self.wait_for_fall_end and len(enemy.enemies) == 0 and session_data.enemies_left == 0:
+                if self.current_fall == len(map_settings.settings.falls)-1:
+                    self.game_mode.on_map_end()
+                else:
+                    self.game_mode.on_fall_end()
+                self.wait_for_fall_end = False
 
         """
         if self.wait_for_fall_end:

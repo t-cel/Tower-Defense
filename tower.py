@@ -9,6 +9,7 @@ import enemy
 import math_utils
 import json
 import math
+import pygame
 
 towers = []
 tower_definitions = []
@@ -19,15 +20,18 @@ CIRCULAR_RANGE_TYPE = "Circular"
 # arrow_num = 0
 
 class TowerDefinition:
-    def __init__(self, name, image, range, range_type, projectile_speed, reload_time, damages, cost):
+    def __init__(self, name, image, projectile_image, range, range_type, projectile_speed, reload_time, damages, cost):
         self.name = name
         self.image = image
+        self.projectile_image = projectile_image
         self.range = range
         self.range_type = range_type
         self.projectile_speed = projectile_speed
         self.reload_time = reload_time
         self.damages = damages
         self.cost = cost
+
+
 
 def load_towers_definitions():
     f = open(DEFINITIONS_PATH + "towers.json")
@@ -37,6 +41,7 @@ def load_towers_definitions():
             TowerDefinition(
                 tower_definition["name"],
                 tower_definition["image"],
+                tower_definition["projectileImage"],
                 tower_definition["range"],
                 tower_definition["rangeType"],
                 tower_definition["projectileSpeed"],
@@ -45,6 +50,8 @@ def load_towers_definitions():
                 tower_definition["cost"]
             )
         )
+
+
 
 class Tower(Component):
     def __init__(self, game_object):
@@ -68,6 +75,10 @@ class Tower(Component):
         self.timer = 0.0
         self.cool_down_duration = 0.4
 
+        self.shot_sound = pygame.mixer.Sound(SOUNDS_PATH + "shot.ogg")
+        self.shot_sound.set_volume(0.5)
+
+
 
     def init_component(self, **kwargs):
         self.enemies_path_coords = kwargs.get("enemies_path_coords")
@@ -84,18 +95,19 @@ class Tower(Component):
         else:
             rectangles = self.game_object.get_components(Rectangle)
 
-            rectangles[0].pos = (-self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5, TILE_SIZE * 0.25)
+            rectangles[0].pos = (-self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5, 0)
             rectangles[0].w = self.definition.range * TILE_SIZE
-            rectangles[0].h = TILE_SIZE * 0.5
+            rectangles[0].h = TILE_SIZE
 
-            rectangles[1].pos = (TILE_SIZE * 0.25, -self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5)
-            rectangles[1].w = TILE_SIZE * 0.5
+            rectangles[1].pos = (0, -self.definition.range * (TILE_SIZE * 0.5) + TILE_SIZE * 0.5)
+            rectangles[1].w = TILE_SIZE
             rectangles[1].h = self.definition.range * TILE_SIZE
 
             self.start_color = rectangles[0].get_color()
             self.range_indicators = rectangles
 
         towers.append(self)
+
 
 
     def valid_map_pos(self, map_pos):
@@ -118,9 +130,11 @@ class Tower(Component):
         return True
 
 
+
     def change_range_indicators_activity(self, show):
         for indicator in self.range_indicators:
             indicator.enabled = show
+
 
 
     def update_drag(self):
@@ -149,6 +163,7 @@ class Tower(Component):
                 self.start_color[2] * mult,
                 self.start_color[3]
             ))
+
 
 
     def get_intercept_pos(self, e):
@@ -188,8 +203,10 @@ class Tower(Component):
         return sol
 
 
+
     def spawn_projectile(self, target_pos):
 
+        self.shot_sound.play()
         # global arrow_num
         # arrow_num+=1
 
@@ -204,7 +221,7 @@ class Tower(Component):
             pos=(0, 0),
             size=(int(TILE_SIZE/2), int(TILE_SIZE/2)),
             angle=0,
-            image_path=PROJECTILES_PATH + 'arrow.png',
+            image_path=PROJECTILES_PATH + self.definition.projectile_image + '.png',
             alpha=True,
             #clone=True
         )
@@ -214,6 +231,7 @@ class Tower(Component):
             speed=self.definition.projectile_speed,
             damages=self.definition.damages
         )
+
 
 
     def detect_and_shot(self):
@@ -232,18 +250,37 @@ class Tower(Component):
                 # todo: zrobić rectangle range na podstawie koordynatów na mapie oraz dystansu
                 #       oraz przy trybie przeciągania dać możliwość wyboru zasięgu horyzontalnego
                 #       lub wertykalnego
-                for rectangle in self.range_indicators:
-                    if rectangle.pos[0] + self.game_object.pos[0] <= e.game_object.pos[0] <= rectangle.pos[0] + \
-                            self.game_object.pos[0] + rectangle.w and \
-                            rectangle.pos[1] + self.game_object.pos[1] <= e.game_object.pos[1] <= rectangle.pos[1] + \
-                            self.game_object.pos[1] + rectangle.h:
-                        target_pos = self.get_intercept_pos(e)
-                        if target_pos is not None:
-                            # print("rectangle")
-                            # print(f"spawn projectile: {arrow_num + 1}")
-                            self.spawn_projectile(target_pos)
-                            self.cool_down = True
-                        return
+
+                enemy_tile_pos = get_tile_pos(e.game_object.pos[0], e.game_object.pos[1])
+                #print(math.fabs(enemy_tile_pos[0] - self.map_pos[0]))
+
+                if (math.fabs(enemy_tile_pos[0] - self.map_pos[0]) <= self.definition.range * 0.5 and
+                    enemy_tile_pos[1] == self.map_pos[1]) or \
+                    (math.fabs(enemy_tile_pos[1] - self.map_pos[1]) <= self.definition.range * 0.5 and
+                     enemy_tile_pos[0] == self.map_pos[0]):
+
+                    target_pos = self.get_intercept_pos(e)
+                    if target_pos is not None:
+                        # print("rectangle")
+                        # print(f"spawn projectile: {arrow_num + 1}")
+                        self.spawn_projectile(target_pos)
+                        self.cool_down = True
+                    return
+
+
+#                for rectangle in self.range_indicators:
+#                    if rectangle.pos[0] + self.game_object.pos[0] <= e.game_object.pos[0] <= rectangle.pos[0] + \
+#                            self.game_object.pos[0] + rectangle.w and \
+#                            rectangle.pos[1] + self.game_object.pos[1] <= e.game_object.pos[1] <= rectangle.pos[1] + \
+#                            self.game_object.pos[1] + rectangle.h:
+#                        target_pos = self.get_intercept_pos(e)
+#                        if target_pos is not None:
+#                            # print("rectangle")
+#                            # print(f"spawn projectile: {arrow_num + 1}")
+#                            self.spawn_projectile(target_pos)
+#                            self.cool_down = True
+#                        return
+
 
 
     def update(self, dt):
@@ -263,6 +300,7 @@ class Tower(Component):
             target_pos = pygame.mouse.get_pos()  # get mouse pos on window
             map_pos = get_tile_pos(target_pos[0], target_pos[1])
             self.change_range_indicators_activity(map_pos == self.map_pos)
+
 
 
     def process_event(self, event):

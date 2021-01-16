@@ -6,6 +6,8 @@ from rectangle import Rectangle
 from tower import Tower
 from enemies_spawner import EnemiesSpawner
 from game_gui_updater import GameGUIUpdater
+from ui.level_end_window import LevelEndWindow
+from ui.save_load_window import SaveLoadWindow
 
 import map
 import file_utils
@@ -95,7 +97,7 @@ class GameMode(Mode):
 
 
     def start_fall(self):
-        self.enemies_spawner.start_spawn(self.on_fall_end)
+        self.enemies_spawner.start_spawn()
         self.start_fall_btn.disable()
         for btn in self.tower_build_buttons:
             btn.disable()
@@ -105,9 +107,47 @@ class GameMode(Mode):
         self.start_fall_btn.enable()
         curr_fall = map_settings.settings.falls[self.enemies_spawner.current_fall]
         session_data.player_gold += curr_fall.gold_reward
-        # for btn in self.tower_build_buttons:
-        #     btn.enable()
         self.game_gui_updater.update_stats_gui()
+
+
+    def on_map_end(self):
+        self.game_gui_updater.update_stats_gui()
+        level_end_window = LevelEndWindow(True, self)
+
+
+    def on_add_damages_to_player(self):
+        if session_data.player_hp <= 0:
+            level_end_window = LevelEndWindow(False, self)
+
+
+    def replay_map(self):
+        switch_mode(MODE_GAME, file_name=self.current_map)
+
+
+    def play_next_map(self):
+        """
+        Works only for campaign levels named as numbers where number means order of levels.
+        """
+
+        only_name = self.current_map.split('.')[0] # remove extension
+
+        if self.current_map.isnumeric():
+            as_num = int(self.current_map)
+
+            maps = file_utils.get_all_files_in_path(MAPS_PATH)
+            for m in maps:
+                map_name = m.split('/')[1].split('.')[0]
+                if map_name.isnumeric() and int(map_name) == as_num+1:
+                    switch_mode(MODE_GAME, file_name=m)
+                    return
+
+        # if we're not in campaign, select next level from list
+        SaveLoadWindow(
+            "maps",
+            "Select Map",
+            lambda f: switch_mode(MODE_GAME, file_name=f),
+            False
+        )
 
 
     def init_gui(self):
@@ -274,7 +314,7 @@ class GameMode(Mode):
             )
 
             UIImage(
-                relative_rect=pygame.Rect(5, -8, image_size[0], image_size[1]),
+                relative_rect=pygame.Rect(0, -8, image_size[0], image_size[1]),
                 image_surface=resource_cache.get_resource(image_path,
                                                           resource_cache.SurfaceType, alpha=True),
                 manager=ui_manager,
@@ -396,10 +436,15 @@ class GameMode(Mode):
 
         self.init_gui()
         map.create_map()
-        map.load_map(kwargs.get("file_name"))
+
+        self.current_map = kwargs.get("file_name")
+
+        map.load_map(self.current_map)
 
         enemies_spawner_gameobject = GameObject((0, 0), (0, 0), 0)
-        enemies_spawner_gameobject.add_component(EnemiesSpawner).init_component()
+        enemies_spawner_gameobject.add_component(EnemiesSpawner).init_component(
+            game_mode=self
+        )
         self.enemies_spawner = enemies_spawner_gameobject.get_components(EnemiesSpawner)[0]
 
         game_gui_updater_go = GameObject((0, 0), (1, 1), 0)

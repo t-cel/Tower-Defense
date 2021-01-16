@@ -2,6 +2,7 @@ from map import *
 from dynamic_sprite import DynamicSprite
 from component import Component
 from static_sprite import StaticSprite
+from auto_destroy import AutoDestroy
 
 from circle import Circle
 
@@ -9,18 +10,20 @@ import session_data
 
 import math_utils
 import json
+import pygame
 
 enemies = []
 enemies_definitions = []
 
 class EnemyDefinition:
-    def __init__(self, name, sprites_directory, speed, health, damages, preview_sprite):
+    def __init__(self, name, sprites_directory, speed, health, damages, preview_sprite, corpses_image):
         self.name = name
         self.sprites_directory = sprites_directory
         self.speed = speed
         self.health = health
         self.damages = damages
         self.preview_sprite = preview_sprite
+        self.corpses_image = corpses_image
 
 
 def load_enemies_definitions():
@@ -34,7 +37,8 @@ def load_enemies_definitions():
                 enemy_definition["speed"],
                 enemy_definition["health"],
                 enemy_definition["damages"],
-                enemy_definition["previewSprite"]
+                enemy_definition["previewSprite"],
+                enemy_definition["corpsesImage"]
             )
         )
 
@@ -61,9 +65,18 @@ class Enemy(Component):
         self.last_pos = (0, 0)
 
         self.definition = None
+        self.game_mode = None
 
         enemies.append(self)
         # print("append")
+
+        self.hit_sounds = [
+            pygame.mixer.Sound(SOUNDS_PATH + "monster_moan.ogg"),
+            pygame.mixer.Sound(SOUNDS_PATH + "monster_moan2.ogg")
+        ]
+
+        for hit_sound in self.hit_sounds:
+            hit_sound.set_volume(0.25)
 
 
     def get_target_pos(self):
@@ -74,6 +87,7 @@ class Enemy(Component):
     def init_component(self, **kwargs):
         self.path_coords = kwargs.get("path_coords")
         self.definition = kwargs.get("definition")
+        self.game_mode = kwargs.get("game_mode")
 
         self.speed = self.definition.speed
         self.hp = self.definition.health
@@ -86,13 +100,13 @@ class Enemy(Component):
 
         # tests
 
-        self.game_object.add_component(Circle).init_component(
-            pos=(0, 0),
-            radius=5,
-            color=(25, 225, 25, 200),
-            thickness=1,
-            z_pos=900
-        )
+        #self.game_object.add_component(Circle).init_component(
+        #    pos=(0, 0),
+        #    radius=5,
+        #    color=(25, 225, 25, 200),
+        #    thickness=1,
+        #    z_pos=900
+        #)
 
 
 
@@ -102,9 +116,26 @@ class Enemy(Component):
 
         if not self.game_object.mark_to_destroy:
             if self.hp <= 0:
+                if random.random() > 0.4:
+                    self.hit_sounds[random.randrange(0, len(self.hit_sounds))].play()
+
                 self.hp = 0
                 enemies.remove(self)
                 self.game_object.mark_to_destroy = True
+
+                # spawn corpses
+                corpses_go = GameObject((self.game_object.pos[0], self.game_object.pos[1] - 10), (1, 1), 0)
+                corpses_go.add_component(StaticSprite).init_component(
+                    pos=(0,0),
+                    size=(TILE_SIZE, TILE_SIZE),
+                    angle=0,
+                    image_path=CORPSES_PATH + self.definition.corpses_image + ".png",
+                    z_pos=101,
+                    alpha=True
+                )
+                corpses_go.add_component(AutoDestroy).init_component(
+                    time_to_destroy=random.random()*4.0+7.0
+                )
 
             # update hp bar
             new_width = int(TILE_SIZE * (self.hp / 100.0))
@@ -141,6 +172,7 @@ class Enemy(Component):
         if self.t > 0.99:
             if self.coord_index == len(self.path_coords) - 1:
                 session_data.player_hp -= self.damages
+                self.game_mode.on_add_damages_to_player()
                 enemies.remove(self)
                 self.game_object.mark_to_destroy = True
                 #pass

@@ -9,6 +9,9 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Tower Defender')
 
+# init mixer
+pygame.mixer.init()
+
 from ui.ui import *
 from modes.game_mode import GameMode
 from modes.editor_mode import EditorMode

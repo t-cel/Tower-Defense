@@ -4,6 +4,7 @@
         {
             "name": "Basic Tower",
             "image": "1",
+            "projectileImage":"arrow2",
             "damages": 4,
             "projectileSpeed": 4.5,
             "reloadTime": 0.4,
@@ -13,7 +14,8 @@
         },
         {
             "name": "Close Range Tower",
-            "image": "1",
+            "image": "2",
+            "projectileImage":"arrow",
             "damages": 10,
             "projectileSpeed": 5.5,
             "reloadTime": 0.6,
@@ -24,20 +26,11 @@
         {
             "name": "Sniper Tower",
             "image": "1",
+            "projectileImage":"arrow",
             "damages": 25,
             "projectileSpeed": 8.0,
             "reloadTime": 1.2,
             "range": 8,
-            "rangeType": "Rectangular",
-            "cost": 500
-        },
-        {
-            "name": "Sniper Tower",
-            "image": "1",
-            "damages": 25,
-            "projectileSpeed": 7.0,
-            "reloadTime": 0.8,
-            "range": 2.25,
             "rangeType": "Rectangular",
             "cost": 500
         }
