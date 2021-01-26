@@ -7,3 +7,6 @@ Using Pygame GUI.
 
 https://www.pygame.org/news  
 https://github.com/MyreMylar/pygame_gui
+
+How to run:
+Donwload, unzip, and run "Tower Defender.bat"
