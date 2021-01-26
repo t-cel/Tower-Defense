@@ -19,11 +19,13 @@ from modes.menu_mode import MenuMode
 from modes.select_level_mode import SelectLevelMode
 import enemy
 import tower
+import spell
 
 def preload_assets():
 
     enemy.load_enemies_definitions()
     tower.load_towers_definitions()
+    spell.load_spells_definitions()
 
     # preload enemies sprites
     for enemy_definition in enemy.enemies_definitions:
@@ -39,6 +41,7 @@ def preload_assets():
             alpha=True
         )
 
+
 def main():
     preload_assets()
 
@@ -50,7 +53,8 @@ def main():
 
     # select start mode
     # switch_mode(MODE_EDITOR)
-    switch_mode(MODE_GAME, file_name="nowa_mapa.tdmap")
+    # switch_mode(MODE_GAME, file_name="nowa_mapa.tdmap")
+    switch_mode(MODE_MENU)
 
     # main loop
     last_frame_ticks = 0

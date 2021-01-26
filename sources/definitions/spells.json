@@ -1,0 +1,66 @@
+{
+    "spells": 
+    [
+        {
+            "name": "Fire Explosion",
+            "spritesDirectory": "explosion",
+            "iconImage":"icon_explosion",
+            "effectType": "damage",
+            "sound": "explosion",
+            "param": 35,
+            "lifetime": 1.0,
+            "duration": 0,
+            "range": 2.0,
+            "researchCost": 300,
+            "useCost": 200
+        },
+
+        {
+            "name": "Slowdown",
+            "spritesDirectory": "slowdown",
+            "iconImage":"icon_slowdown",
+            "effectType": "slowdown",
+            "sound": "slowdown",
+            "param": 75,
+            "lifetime": 1.0,
+            "duration": 5.0,
+            "range": 2.0,
+            "researchCost": 400,
+            "useCost": 300
+        },
+
+        {
+            "name": "Toxic Cloud",
+            "spritesDirectory": "toxic cloud",
+            "animationStates":
+            [               
+                {
+                    "transitionType": "simple",
+                    "frameStart": 0,
+                    "frameEnd": 1
+                },
+
+                {
+                    "transitionType": "conditional",
+                    "frameStart": 1,
+                    "frameEnd": 7
+                },
+
+                {
+                    "transitionType": "simple",
+                    "frameStart": 7,
+                    "frameEnd": 10
+                }
+            ],
+            "iconImage":"icon_toxic_cloud",
+            "effectType": "damage",
+            "sound": "toxic_cloud",
+            "param": 25,
+            "lifetime": 6.0,
+            "duration": 3.0,
+            "range": 2.0,
+            "researchCost": 500,
+            "useCost": 400
+        }
+    ]
+}

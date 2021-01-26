@@ -6,9 +6,14 @@
             "spritesDirectory": "2",
             "previewSprite": "Golem_02_Walking_000",
             "corpsesImage": "corpses_bones",
-            "speed": 1.15,
-            "health": 20,
-            "damages": 5
+            "speed": 1.4,
+            "health": 28,
+            "damages": 5,
+            "hitSounds":
+            [
+                "monster_moan",
+                "monster_moan2"
+            ]
         },
 
         {
@@ -16,9 +21,14 @@
             "spritesDirectory": "3",
             "previewSprite": "Golem_03_Walking_000",
             "corpsesImage": "corpses_tree",
-            "speed": 1.0,
-            "health": 30,
-            "damages": 8
+            "speed": 1.3,
+            "health": 42,
+            "damages": 8,
+            "hitSounds":
+            [
+                "monster_moan",
+                "monster_moan2"
+            ]
         },
 
         {
@@ -26,9 +36,74 @@
             "spritesDirectory": "1",
             "previewSprite": "Golem_01_Walking_000",
             "corpsesImage": "corpses_stones",
-            "speed": 0.9,
-            "health": 40,
-            "damages": 11
-        }
+            "speed": 1.1,
+            "health": 75,
+            "damages": 13,
+            "hitSounds":
+            [
+                "monster_moan",
+                "monster_moan2"
+            ]
+        },
+
+        {
+            "name": "Ghost",
+            "spritesDirectory": "4",
+            "previewSprite": "Wraith_01_Moving Forward_000",
+            "corpsesImage": "corpses_bones",
+            "speed": 1.7,
+            "health": 30,
+            "damages": 7,
+            "hitSounds":
+            [
+                "ghost_moan",
+                "ghost_moan2"
+            ]
+        },
+
+        {
+            "name": "Wraith",
+            "spritesDirectory": "5",
+            "previewSprite": "Wraith_02_Moving Forward_000",
+            "corpsesImage": "corpses_bones",
+            "speed": 1.9,
+            "health": 35,
+            "damages": 11,
+            "hitSounds":
+            [
+                "ghost_moan",
+                "ghost_moan2"
+            ]
+        },
+
+        {
+            "name": "Shadow",
+            "spritesDirectory": "6",
+            "previewSprite": "Wraith_03_Moving Forward_000",
+            "corpsesImage": "corpses_bones",
+            "speed": 2.4,
+            "health": 50,
+            "damages": 17,
+            "hitSounds":
+            [
+                "ghost_moan",
+                "ghost_moan2"
+            ]
+        },
+
+        {
+            "name": "Minotaur",
+            "spritesDirectory": "7",
+            "previewSprite": "Minotaur_01_Walking_000",
+            "corpsesImage": "corpses_bones",
+            "speed": 1.4,
+            "health": 120,
+            "damages": 25,
+            "hitSounds":
+            [
+                "monster_moan",
+                "monster_moan2"
+            ]
+        } 
     ]
 }

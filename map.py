@@ -190,11 +190,12 @@ def load_map(file_name):
     """
         dummy settings
     """
+    """
     # groups
     groups_1 = [
-        map_settings.EnemiesGroup([5, 0, 0], 0.0, (0.5, 0.8)),
-        map_settings.EnemiesGroup([7, 0, 0], 1.0, (0.5, 0.8)),
-        map_settings.EnemiesGroup([10, 0, 0], 3.0, (0.5, 0.8))
+        map_settings.EnemiesGroup([5, 5, 5, 5, 5, 5, 5], 0.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([7, 0, 0, 5, 1, 5, 5], 1.0, (0.5, 0.8)),
+        map_settings.EnemiesGroup([10, 0, 0, 5, 3, 5, 5], 3.0, (0.5, 0.8))
     ]
 
     groups_2 = [
@@ -212,7 +213,7 @@ def load_map(file_name):
 
     # falls
 
-    map_settings.settings.start_gold = 500
+    map_settings.settings.start_gold = 5000
     map_settings.settings.falls = [
         map_settings.EnemiesFall(groups_1, 200),
         map_settings.EnemiesFall(groups_2, 500),
@@ -220,6 +221,9 @@ def load_map(file_name):
     ]
 
     session_data.player_gold = map_settings.settings.start_gold
+    """
+    session_data.player_gold = map_settings.settings.start_gold
+    session_data.player_mana = map_settings.settings.start_mana
 
 
 """
@@ -292,7 +296,7 @@ def remove_enemy_path_last_point():
 
 
 def clear_map():
-    settings = map_settings.settings
-
-    while len(settings.enemies_path_coords) > 0:
+    while len(map_settings.settings.enemies_path_coords) > 0:
         remove_enemy_path_last_point()
+
+    map_settings.settings = map_settings.MapSettings()

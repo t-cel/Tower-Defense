@@ -21,7 +21,10 @@ class EnemiesFall:
 
 class MapSettings:
     def __init__(self):
-        self.start_gold = 0
+        self.start_gold = 500
+        self.start_mana = 0
+        self.max_tower = 3
+        self.max_spell = 3
         self.falls = []
         self.enemies_path_coords = []
 

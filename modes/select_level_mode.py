@@ -36,13 +36,14 @@ class SelectLevelMode(Mode):
 
         for y in range(0, 4):
             for x in range(0, 6):
+                nr = 1 + x + y * 6
                 level_btn = UIButton(
                     pygame.Rect(
                         SCREEN_WIDTH / 2 - (3 * LEVEL_BUTTON_SIZE + 2 * MARGIN + MARGIN / 2) + x * (LEVEL_BUTTON_SIZE + MARGIN),
                         SCREEN_HEIGHT / 2 - (2 * LEVEL_BUTTON_SIZE + MARGIN + MARGIN / 2) + y * (LEVEL_BUTTON_SIZE + MARGIN),
                         LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE
                     ),
-                    str(1 + x + y * 6),
+                    str(nr),
                     ui_manager,
                     container=bg_panel,
                     anchors={
@@ -52,7 +53,12 @@ class SelectLevelMode(Mode):
                         "bottom": "bottom"
                     }
                 )
-                #register_ui_callback(self.start_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: switch_mode(MODE_GAME))
+
+                if nr > 8:
+                    level_btn.disable()
+                else:
+                    register_ui_callback(level_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e, n=nr: switch_mode(MODE_GAME,
+                                                                                                        file_name=f"{n}.tdmap"))
 
         back_btn = UIButton(
             pygame.Rect(40, -80, 200, 60),

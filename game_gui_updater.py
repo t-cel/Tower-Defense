@@ -1,6 +1,7 @@
 from component import Component
 
 import tower
+import spell
 import session_data
 import map_settings
 import definitions
@@ -13,34 +14,61 @@ class GameGUIUpdater(Component):
         self.fall_label = None
         self.fall_reward_label = None
         self.gold_label = None
+
         self.tower_build_buttons = []
+        self.spell_research_buttons = []
+        self.spell_use_buttons = []
 
         self.enemies_spawner = None
         self.player_hp_bar = None
         self.enemies_fall_bar = None
+        self.game_mode = None
 
 
     def init_component(self, **kwargs):
         self.fall_label = kwargs.get("fall_label")
         self.fall_reward_label = kwargs.get("fall_reward_label")
         self.gold_label = kwargs.get("gold_label")
+        self.game_mode = kwargs.get("game_mode")
+
         self.tower_build_buttons = kwargs.get("tower_build_buttons")
+        self.spell_research_buttons = kwargs.get("spell_research_buttons")
+        self.spell_use_buttons = kwargs.get("spell_use_buttons")
+
         self.enemies_spawner = kwargs.get("enemies_spawner")
         self.player_hp_bar = kwargs.get("player_hp_bar")
         self.enemies_fall_bar = kwargs.get("enemies_fall_bar")
 
 
     def update_stats_gui(self):
-        self.gold_label.html_text = "<b><font color=#DEAF21>Gold: </font>" + str(session_data.player_gold) + "</b>";
+        self.gold_label.html_text = f"<b><font color=#DEAF21>Gold: </font>{session_data.player_gold}</b>, " +\
+                                    f"<b><font color=#4488FF>Mana: </font>{session_data.player_mana}</b>"
         self.gold_label.rebuild()
 
-        i = 0
-        for btn in self.tower_build_buttons:
+        for i in range(0, len(tower.tower_definitions)):
+            if i+1 > map_settings.settings.max_tower:
+                break
             if tower.tower_definitions[i].cost > session_data.player_gold:
-                btn.disable()
+                self.tower_build_buttons[i].disable()
             else:
-                btn.enable()
-            i += 1
+                self.tower_build_buttons[i].enable()
+
+
+        for i in range(0, len(spell.spells_definitions)):
+            if i+1 > map_settings.settings.max_spell:
+                break
+            if session_data.spells_researched[i] or spell.spells_definitions[i].research_cost > session_data.player_gold:
+                self.spell_research_buttons[i].disable()
+            else:
+                self.spell_research_buttons[i].enable()
+
+            if not self.game_mode.build_mode_active and \
+                    session_data.spells_researched[i] and \
+                    spell.spells_definitions[i].use_cost <= session_data.player_mana:
+                self.spell_use_buttons[i].enable()
+            else:
+                self.spell_use_buttons[i].disable()
+
 
         self.fall_label.html_text = "<b>Falls Finished:</b> " + \
                                     str(self.enemies_spawner.current_fall + 1) + " / " + \

@@ -75,7 +75,7 @@ class EditorMode(Mode):
                 "bottom": "bottom"
             }
         )
-        register_ui_callback(self.settings_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: print("settings"))
+        register_ui_callback(self.settings_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: MapSettingsWindow())
 
         # clear button
         self.clear_btn = UIButton(
@@ -107,7 +107,8 @@ class EditorMode(Mode):
         )
         register_ui_callback(self.back_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e: self.on_back_to_menu_btn_click())
 
-        self.settings_window = MapSettingsWindow()
+        #self.settings_window = MapSettingsWindow()
+
 
     def open_file_dialog(self, save=True):
         self.file_dialog = SaveLoadWindow(
@@ -116,6 +117,7 @@ class EditorMode(Mode):
             lambda f: self.on_save_confirm_btn_click(f) if save else self.on_load_confirm_btn_click(f),
             save
         )
+
 
     def on_save_confirm_btn_click(self, f):
         splitted = f.split('.')
@@ -127,9 +129,11 @@ class EditorMode(Mode):
 
         save_map(splitted[0] + MAPS_EXTENSION)
 
+
     def on_load_confirm_btn_click(self, f):
         load_map(f)
         editor.update_indicators()
+
 
     def on_clear_btn_click(self):
         if len(map_settings.settings.enemies_path_coords) == 0:
@@ -141,6 +145,7 @@ class EditorMode(Mode):
             lambda result: (clear_map(), editor.update_indicators()) if result == MESSAGEBOX_RESULT_YES else ()
         )
 
+
     def on_back_to_menu_btn_click(self):
         show_message_box(
             "Do you really want to exit editor?",
@@ -148,10 +153,13 @@ class EditorMode(Mode):
             lambda result: switch_mode(MODE_MENU) if result == MESSAGEBOX_RESULT_YES else ()
         )
 
+
     def init_mode(self, **kwargs):
         self.init_gui()
         map.create_map()
+        map.clear_map()
         editor.init_editor(ui_manager)
+
 
     def deinit_mode(self):
         clear_map()

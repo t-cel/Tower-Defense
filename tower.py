@@ -81,6 +81,8 @@ class Tower(Component):
 
 
     def init_component(self, **kwargs):
+        super().init_component(**kwargs)
+
         self.enemies_path_coords = kwargs.get("enemies_path_coords")
         self.definition = kwargs.get("definition")
         self.on_build_callback = kwargs.get("on_build_callback")
@@ -266,20 +268,18 @@ class Tower(Component):
                         self.spawn_projectile(target_pos)
                         self.cool_down = True
                     return
-
-
-#                for rectangle in self.range_indicators:
-#                    if rectangle.pos[0] + self.game_object.pos[0] <= e.game_object.pos[0] <= rectangle.pos[0] + \
-#                            self.game_object.pos[0] + rectangle.w and \
-#                            rectangle.pos[1] + self.game_object.pos[1] <= e.game_object.pos[1] <= rectangle.pos[1] + \
-#                            self.game_object.pos[1] + rectangle.h:
-#                        target_pos = self.get_intercept_pos(e)
-#                        if target_pos is not None:
-#                            # print("rectangle")
-#                            # print(f"spawn projectile: {arrow_num + 1}")
-#                            self.spawn_projectile(target_pos)
-#                            self.cool_down = True
-#                        return
+                #for rectangle in self.range_indicators:
+                #     if rectangle.pos[0] + self.game_object.pos[0] <= e.game_object.pos[0] <= rectangle.pos[0] + \
+                #             self.game_object.pos[0] + rectangle.w and \
+                #             rectangle.pos[1] + self.game_object.pos[1] <= e.game_object.pos[1] <= rectangle.pos[1] + \
+                #             self.game_object.pos[1] + rectangle.h:
+                #         target_pos = self.get_intercept_pos(e)
+                #         if target_pos is not None:
+                #             # print("rectangle")
+                #             # print(f"spawn projectile: {arrow_num + 1}")
+                #             self.spawn_projectile(target_pos)
+                #             self.cool_down = True
+                #         return
 
 
 
@@ -300,7 +300,6 @@ class Tower(Component):
             target_pos = pygame.mouse.get_pos()  # get mouse pos on window
             map_pos = get_tile_pos(target_pos[0], target_pos[1])
             self.change_range_indicators_activity(map_pos == self.map_pos)
-
 
 
     def process_event(self, event):
