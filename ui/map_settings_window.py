@@ -34,6 +34,7 @@ class MapSettingsWindow(UIWindow):
                 )],
             100)
         )
+        self.current_selected_group = 0
         self.update_settings()
 
 
@@ -49,6 +50,7 @@ class MapSettingsWindow(UIWindow):
         for i in range(0, len(self.falls_ui_list.item_list)):
             if self.falls_ui_list.item_list[i]['selected']:
                 self.current_selected_fall = i
+                self.current_selected_group = 0
                 self.update_groups_list()
                 self.update_fall_panel()
                 return
