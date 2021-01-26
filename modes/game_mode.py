@@ -149,14 +149,14 @@ class GameMode(Mode):
 
         only_name = self.current_map.split('.')[0] # remove extension
 
-        if self.current_map.isnumeric():
-            as_num = int(self.current_map)
+        if only_name.isnumeric():
+            as_num = int(only_name)
 
             maps = file_utils.get_all_files_in_path(MAPS_PATH)
             for m in maps:
                 map_name = m.split('/')[1].split('.')[0]
                 if map_name.isnumeric() and int(map_name) == as_num+1:
-                    switch_mode(MODE_GAME, file_name=m)
+                    switch_mode(MODE_GAME, file_name=map_name + ".tdmap")
                     return
 
         # if we're not in campaign, select next level from list
