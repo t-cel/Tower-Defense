@@ -17,3 +17,15 @@ In it's current state, game has:
 - 7 different enemies
 - 3 tower types
 - map editor
+
+## Screenshots:
+
+### Game:
+
+
+![screen shot 1](github/screenshot1.jpg "")
+
+### Editor:
+
+
+![screen shot 2](github/screenshot2.jpg "")
