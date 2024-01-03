@@ -8,6 +8,8 @@ from pygame_gui.elements.ui_button import UIButton
 from ui.ui import *
 from ui.save_load_window import SaveLoadWindow
 
+import os
+
 class SelectLevelMode(Mode):
 
     def init_gui(self):
@@ -54,11 +56,11 @@ class SelectLevelMode(Mode):
                     }
                 )
 
-                if nr > 8:
-                    level_btn.disable()
-                else:
+                if os.path.exists(f"./maps/{nr}.tdmap"):
                     register_ui_callback(level_btn, pygame_gui.UI_BUTTON_PRESSED, lambda e, n=nr: switch_mode(MODE_GAME,
-                                                                                                        file_name=f"{n}.tdmap"))
+                                                                                                        file_name=f"{n}.tdmap"))          
+                else:
+                    level_btn.disable()
 
         back_btn = UIButton(
             pygame.Rect(40, -80, 200, 60),
